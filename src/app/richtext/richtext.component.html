@@ -1,0 +1,50 @@
+<tiptap-editor [editor]="editor" [(ngModel)]="value" id="editor-with-bubble-menu"></tiptap-editor>
+<tiptap-bubble-menu [editor]="editor">
+  <div class=" p-2 border border-black rounded bg-black text-gray-500 ">
+    <button
+      type="button"
+      class="px-1 hover:text-white"
+      (click)="editor.chain().focus().toggleHeading({level: 1}).run()"
+      [ngClass]="{ 'bg-gray-900 text-white': editor.isActive('bold') }"
+    >
+      <!-- heading  -->
+      <lucide-angular [img]="Heading" class="my-icon"></lucide-angular>
+    </button>
+    <button
+      type="button"
+      class="px-1 hover:text-white"
+      (click)="editor.chain().focus().toggleBold().run()"
+      [ngClass]="{ 'bg-gray-900 text-white': editor.isActive('bold') }"
+    >
+      <!-- bold -->
+      <lucide-angular [img]="Bold" class="my-icon"></lucide-angular>
+    </button>
+    <button
+      type="button"
+      class="px-1 hover:text-white"
+      (click)="editor.chain().focus().toggleItalic().run()"
+      [ngClass]="{ 'bg-gray-900 text-white': editor.isActive('italic') }"
+    >
+      <!-- italic -->
+      <lucide-angular [img]="Italic" class="my-icon"></lucide-angular>
+    </button>
+    <button
+      type="button"
+      class="px-1 hover:text-white"
+      (click)="editor.chain().focus().toggleStrike().run()"
+      [ngClass]="{ 'bg-gray-900 text-white': editor.isActive('strike') }"
+    >
+      <!-- strike -->
+      <lucide-angular [img]="Strikethrough" class="my-icon"></lucide-angular>
+    </button>
+    <button
+    type="button"
+    class="px-1 hover:text-white"
+    (click)="editor.chain().focus().toggleUnderline().run()"
+    [ngClass]="{ 'bg-gray-900 text-white': editor.isActive('strike') }"
+    >
+    <!-- underline -->
+    <lucide-angular [img]="Underline" class="my-icon"></lucide-angular>
+    </button>
+  </div>
+</tiptap-bubble-menu>
