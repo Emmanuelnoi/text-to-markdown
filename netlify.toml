@@ -1,0 +1,5 @@
+[build]
+  command = "ng build"
+  publish = "dist/markdown_converter/browser"
+  functions = "netlify/functions"
+
