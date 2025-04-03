@@ -32,31 +32,33 @@ export async function netlifyAppEngineHandler(request: Request): Promise<Respons
  */
 export const reqHandler = createRequestHandler(netlifyAppEngineHandler)
 
+
+// run dev mode
 // const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 // const browserDistFolder = resolve(serverDistFolder, '../browser');
 
 // const app = express();
 // const angularApp = new AngularNodeAppEngine();
 
-/**
- * The request handler used by the Angular CLI (dev-server and during build).
- */
+// /**
+//  * The request handler used by the Angular CLI (dev-server and during build).
+//  */
 
-/**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/**', (req, res) => {
- *   // Handle API request
- * });
- * ```
- */
+// /**
+//  * Example Express Rest API endpoints can be defined here.
+//  * Uncomment and define endpoints as necessary.
+//  *
+//  * Example:
+//  * ```ts
+//  * app.get('/api/**', (req, res) => {
+//  *   // Handle API request
+//  * });
+//  * ```
+//  */
 
-/**
- * Serve static files from /browser
- */
+// /**
+//  * Serve static files from /browser
+//  */
 // app.use(
 //   express.static(browserDistFolder, {
 //     maxAge: '1y',
@@ -65,9 +67,9 @@ export const reqHandler = createRequestHandler(netlifyAppEngineHandler)
 //   }),
 // );
 
-/**
- * Handle all other requests by rendering the Angular application.
- */
+// /**
+//  * Handle all other requests by rendering the Angular application.
+//  */
 // app.use('/**', (req, res, next) => {
 //   angularApp
 //     .handle(req)
@@ -77,10 +79,10 @@ export const reqHandler = createRequestHandler(netlifyAppEngineHandler)
 //     .catch(next);
 // });
 
-/**
- * Start the server if this module is the main entry point.
- * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
- */
+// /**
+//  * Start the server if this module is the main entry point.
+//  * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
+//  */
 // if (isMainModule(import.meta.url)) {
 //   const port = process.env['PORT'] || 4000;
 //   app.listen(port, () => {
@@ -88,7 +90,7 @@ export const reqHandler = createRequestHandler(netlifyAppEngineHandler)
 //   });
 // }
 
-/**
- * Request handler used by the Angular CLI (for dev-server and during build) or Firebase Cloud Functions.
- */
+// /**
+//  * Request handler used by the Angular CLI (for dev-server and during build) or Firebase Cloud Functions.
+//  */
 // export const reqHandler = createNodeRequestHandler(app);

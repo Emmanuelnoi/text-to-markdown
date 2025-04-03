@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, input } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule, Heading, Bold, Italic, Strikethrough,Underline } from 'lucide-angular';
-
 
 import { Editor } from '@tiptap/core';
 import Placeholder from '@tiptap/extension-placeholder';
@@ -18,34 +17,46 @@ import { TiptapBubbleMenuDirective, TiptapEditorDirective } from 'ngx-tiptap';
   templateUrl: './richtext.component.html',
   styleUrl: './richtext.component.css'
 })
-export class RichtextComponent implements OnDestroy {
-
+export class RichtextComponent {
+  
   readonly Heading = Heading;
   readonly Bold = Bold;
   readonly Italic = Italic;
   readonly Strikethrough = Strikethrough;
   readonly Underline = Underline;
-  value = `"This is a Test run. Remember: Power to you!"`;
 
+  editor! : Editor;
+  // value = `"This is a Test run. Remember: Power to you!"`;
 
-  editor = new Editor({
-    extensions: [
-      StarterKit,
-      Placeholder,
-      TiptapUnderline,
-      TiptapHeading.configure({
-        levels: [1],
-      })
-    ],
-    editorProps: {
-      attributes: {
-        class: 'mt-4 p-10 border-black hover:border-blue-700 focus:border-red-700 border-1 rounded-md outline-none',
-        spellCheck: 'false',
+  content = signal<string>('');
+  constructor(){
+    this.initializeEditor();
+  }
+
+  private initializeEditor(){
+    this.editor = new Editor({
+      extensions: [
+        StarterKit,
+        Placeholder,
+        TiptapUnderline,
+        TiptapHeading.configure({
+          levels: [1],
+        })
+      ],
+      editorProps: {
+        attributes: {
+          class: 'mt-4 p-10 border-black hover:border-blue-700 focus:border-red-700 border-1 rounded-md outline-none',
+          spellCheck: 'false',
+        },
       },
-    },
-  });
+      onUpdate: ({ editor }) => {
+        this.content.set(editor.getHTML()); // Update signal when content changes
+      }
+    });
+  }
 
-  ngOnDestroy(): void {
+  // Destroy editor when component is removed
+  ngOnDestroy() {
     this.editor.destroy();
   }
 
