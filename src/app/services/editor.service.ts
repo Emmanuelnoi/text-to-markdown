@@ -81,11 +81,28 @@ destroyEditor() {
 
 
   // Convert Tiptap HTML to Markdown
-  convertToMarkdown() {
-    const html = this.content();
-    if (!html.trim()) return; // do nothing if empty
+  // convertToMarkdown() {
+  //   const html = this.content();
+  //   if (!html.trim()) return; // do nothing if empty
   
-    this.markdownContent.set(this.turndownService.turndown(html));
+  //   this.markdownContent.set(this.turndownService.turndown(html));
+  // }
+
+  convertToMarkdown(): void {
+    const html = this.content().trim();
+
+    if (!html) {
+      alert('No content to convert to Markdown.');
+      return;
+    }
+
+    try {
+      const markdown = this.turndownService.turndown(html);
+      this.markdownContent.set(markdown);
+    } catch (error) {
+      console.error('Markdown conversion failed:', error);
+      alert('Something went wrong while converting.');
+    }
   }
 
   // Copy Markdown to Clipboard

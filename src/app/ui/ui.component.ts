@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, inject, OnDestroy, OnInit, signal, Signal, WritableSignal } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, inject, OnDestroy, OnInit, signal, Signal, ViewChild, WritableSignal } from '@angular/core';
 import { LucideAngularModule, Keyboard, ClipboardCopy, ArrowDownToLine, BadgeHelp,RefreshCcw } from 'lucide-angular';
 import { RichtextComponent } from "../richtext/richtext.component";
 import { EditorService } from '../services/editor.service';
@@ -25,11 +25,13 @@ export class UiComponent implements OnInit, OnDestroy{
   private componentStateService = inject(ComponentStateService); // inject componentStateService using 'inject'
   private cd = inject(ChangeDetectorRef);
 
+  @ViewChild('markdownPreview', { static: false}) markdownPreviewRef!: ElementRef<HTMLElement>;
+
+
   // Accessing the signal from the service
   isComponentVisible = this.componentStateService.getComponentVisibility();
   content: Signal<string> = this.editorService.content; // Get editor content
   markdownContent: WritableSignal<string> = this.editorService.markdownContent; // Get markdown content
-
   isLoading = signal(false); // Track loading state
 
   ngOnInit() {}
@@ -41,20 +43,45 @@ export class UiComponent implements OnInit, OnDestroy{
   // Convert to Markdown
   async convertMarkdown() {
     const contentValue = this.content();
-
+  
     if (contentValue.trim() === '') {
       alert('No content to convert to Markdown.');
       return;
     }
-
-    this.isLoading.set(true);  // Set loading to true
-
+  
+    this.isLoading.set(true);
+  
     try {
       await this.editorService.convertToMarkdown();
+  
+      // Allow DOM to update before scrolling
+      setTimeout(() => {
+        if (this.markdownPreviewRef?.nativeElement) {
+          this.markdownPreviewRef.nativeElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      }, 100);
     } catch (error) {
       console.error('Markdown conversion failed', error);
+      alert('An error occurred while converting to Markdown.');
     } finally {
-      this.isLoading.set(false); // Set loading to false
+      this.isLoading.set(false);
+    }
+  }
+  
+  ngAfterViewInit() {
+    // safe to scroll or use ViewChild here
+    this.scrollToPreview()
+  }
+
+  scrollToPreview() {
+    if (this.markdownPreviewRef) {
+      this.markdownPreviewRef.nativeElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
     }
   }
 
@@ -88,3 +115,4 @@ export class UiComponent implements OnInit, OnDestroy{
     this.markdownContent.set(''); // Reset markdown content to empty string
   }
 }
+

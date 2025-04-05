@@ -1,10 +1,11 @@
 ::ng-deep .ProseMirror {
     margin-top: 1rem;
+    margin-bottom: 5rem;
     padding: 2.5rem;
     border: 0px solid black;
     border-radius: 0.375rem;
     outline: none;                   /* outline-none */
-    background-color: white;
+    background-color: rgb(255, 255, 255);
     transition: border-color 0.2s;
   }
   
@@ -34,10 +35,14 @@
   }
 
   .custom-box {
+    overflow: hidden; /* Hides any overflowing content */
+    white-space: pre-wrap; /* Ensures text wraps within the container */
+    word-wrap: break-word; /* Breaks long words */
+    max-width: 100%; /* Prevents overflow beyond container */
     padding: 2.5rem;
-    margin-top: 1rem;
+    margin-top: 0.25rem;
     border: 1px solid black;
-    border-color: #16a34a;
+    border-color: #71f494;
     border-radius: 0.375rem;
     outline: none;
     background-color: #ffff;
@@ -55,13 +60,13 @@
     left: 50%;
     transform: translateX(-50%);
     background-color: #ffffff;
-    color: #6b7280; /* gray-700 */
-    border: 1px solid #d1d5db; /* gray-300 */
+    color: #6b7280; 
+    border: 1px solid #d1d5db; 
     padding: 0.4rem;
     border-radius: 0.375rem;
     margin-bottom: 0.4rem;
     text-align: center;
-    font-size: 0.875rem; /* text-sm */
+    font-size: 0.875rem; 
     white-space: nowrap;
     z-index: 1;
     transition: opacity 0.3s;
@@ -72,4 +77,11 @@
     opacity: 1;
   }
   
+  .markDown-title {
+    margin-top: 1rem;
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: #111827;
+  }
   
