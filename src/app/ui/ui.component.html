@@ -1,35 +1,5 @@
-<!-- <div class="flex justify-between mb-2">
-  <button 
-    class="h-10 w-10 flex items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-100"
-    aria-label="Keyboard shortcuts"
-    (click)="showKeyboardShortcuts()">
-    <lucide-angular [img]="Keyboard"></lucide-angular>
-  </button>
 
-  <div class="flex gap-2">
-    <button 
-      class="h-10 w-10 flex items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-100"
-      aria-label="Copy to clipboard"
-      (click)="copyToClipboard()">
-      <lucide-angular [img]="ClipboardCopy"></lucide-angular>
-    </button>
-    <button 
-      class="h-10 w-10 flex items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-100"
-      aria-label="Download"
-      (click)="downloadMarkdown()">
-      <lucide-angular [img]="ArrowDownToLine"></lucide-angular>
-    </button>
-    <button 
-      class="h-10 w-10 flex items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-100"
-      aria-label="Help"
-      (click)="showHelp()">
-      <lucide-angular [img]="BadgeHelp"></lucide-angular>
-    </button>
-  </div>
-</div> -->
-
-
-<div class="min-h-screen flex flex-col items-center py-12 px-4 bg-gray-50">
+<div class="min-h-screen flex flex-col items-center py-12 px-4 bg-gray-200">
   <div class="max-w-3xl w-full text-center space-y-2 mb-10">
     <h1 class="text-4xl font-bold tracking-tight text-gray-900">Convert Rich Text to Markdown</h1>
     <p class="text-lg text-gray-600">Quickly convert your rich formatted text to Markdown</p>
@@ -37,42 +7,58 @@
   
   <div class="max-w-3xl w-full"> 
     <div class="flex justify-between mb-2">
-      <button 
-        class="h-10 w-10 flex items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-100"
+      <div class="tooltip-container">
+        <!-- <button 
+        class="custom-button"
         aria-label="Keyboard shortcuts"
         (click)="showKeyboardShortcuts()">
         <lucide-angular [img]="Keyboard"></lucide-angular>
-      </button>
+      </button> -->
+        <span class="tooltip-text">Nothing yet</span>
+      </div>
     
       <div class="flex gap-2">
-        <button 
-          class="h-10 w-10 flex items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-100"
-          aria-label="Copy to clipboard"
-          (click)="convertToMarkdown(editor.content)">
-          <lucide-angular [img]="RefreshCcw"></lucide-angular>
-        </button>
-        <button 
-          class="h-10 w-10 flex items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-100"
-          aria-label="Copy to clipboard"
-          (click)="copyToClipboard()">
-          <lucide-angular [img]="ClipboardCopy"></lucide-angular>
-        </button>
-        <button 
-          class="h-10 w-10 flex items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-100"
+        <div class="tooltip-container">
+          <button 
+            class="custom-button"
+            aria-label="Copy to clipboard"
+            (click)="convertMarkdown()">
+            <lucide-angular [img]="RefreshCcw"></lucide-angular>
+          </button>
+          <span class="tooltip-text">Convert to Markdown</span>
+        </div>
+        <div class="tooltip-container">
+          <button 
+            class="custom-button"
+            aria-label="Copy to clipboard"
+            (click)="copyToClipboard()">
+            <lucide-angular [img]="ClipboardCopy"></lucide-angular>
+          </button>
+          <span class="tooltip-text">Copy Markdown</span>
+        </div>
+        <div class="tooltip-container">
+          <button 
+          class="custom-button"
           aria-label="Download"
           (click)="downloadMarkdown()">
           <lucide-angular [img]="ArrowDownToLine"></lucide-angular>
         </button>
-        <button 
-          class="h-10 w-10 flex items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-100"
+          <span class="tooltip-text">Download as .md File</span>
+        </div>
+        <div class="tooltip-container">
+          <button 
+          class="custom-button"
           aria-label="Help"
           (click)="showHelp()">
           <lucide-angular [img]="BadgeHelp"></lucide-angular>
         </button>
+          <span class="tooltip-text">Help</span>
+        </div>
       </div>
     </div>
     <app-richtext #editor></app-richtext>
-    <!-- <button (click)="runBothActions(editor.content)">Convert</button> -->
-    <pre>{{ markdownOutput }}</pre>
+    @if (showMarkdown()) {
+      <pre class='custom-box'>{{ markdownContent() }}</pre>
+    }
   </div>
 </div>

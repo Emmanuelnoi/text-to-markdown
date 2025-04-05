@@ -11,10 +11,7 @@
 }
  */
 
- .ProseMirror {
-  line-height: 2.5; /* Adjust to your preference */
-}
-
+ 
 
 .ProseMirror > * + * {
   margin-top: 0.75rem;
@@ -72,6 +69,5 @@ svg.my-icon {
 .bubble-menu button lucide-angular {
   width: 20px;
   height: 20px;
-  /* stroke-width: 3; */
 }
 

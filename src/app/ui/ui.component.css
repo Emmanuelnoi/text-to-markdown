@@ -1,0 +1,75 @@
+::ng-deep .ProseMirror {
+    margin-top: 1rem;
+    padding: 2.5rem;
+    border: 0px solid black;
+    border-radius: 0.375rem;
+    outline: none;                   /* outline-none */
+    background-color: white;
+    transition: border-color 0.2s;
+  }
+  
+  ::ng-deep .ProseMirror:hover {
+    border-color: #1d4ed8;
+  }
+  
+  ::ng-deep .ProseMirror:focus {
+    border-color: #b91c1c;
+  } 
+  
+
+  .custom-button {
+    height: 2.5rem;
+    width: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.375rem;
+    background-color: #ffff;
+    transition: background-color 0.2s ease; /* smooth hover transition */
+  }
+  
+  .custom-button:hover {
+    background-color: #f3f4f6;
+    color: #f60606;
+  }
+
+  .custom-box {
+    padding: 2.5rem;
+    margin-top: 1rem;
+    border: 1px solid black;
+    border-color: #16a34a;
+    border-radius: 0.375rem;
+    outline: none;
+    background-color: #ffff;
+  }
+  
+  .tooltip-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .tooltip-text {
+    visibility: hidden;
+    position: absolute;
+    bottom: 100%; /* Position above the button */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ffffff;
+    color: #6b7280; /* gray-700 */
+    border: 1px solid #d1d5db; /* gray-300 */
+    padding: 0.4rem;
+    border-radius: 0.375rem;
+    margin-bottom: 0.4rem;
+    text-align: center;
+    font-size: 0.875rem; /* text-sm */
+    white-space: nowrap;
+    z-index: 1;
+    transition: opacity 0.3s;
+  }
+  
+  .tooltip-container:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }
+  
+  
