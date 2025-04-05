@@ -1,0 +1,23 @@
+<div *ngIf="isOpen()" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-content">
+        <div class="content-container">
+          <h1>How does this work?</h1>
+          
+          <p>
+            Enter or paste your rich-formatted text into the editor. Once done, you can either copy the Markdown to your clipboard or download it as a .md file.
+          </p>
+          
+          <p>
+            To explore all formatting options, simply select the text and a toolbar will appear.
+          </p>
+          
+          <div class="button-container">
+            <button class="done-button" (click)="closeModal()">
+              close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -5,6 +5,7 @@ import { LucideAngularModule, Heading, Bold, Italic, Strikethrough,Underline } f
 
 import { TiptapBubbleMenuDirective, TiptapEditorDirective } from 'ngx-tiptap';
 import { EditorService } from '../services/editor.service';
+import { Editor } from '@tiptap/core';
 
 @Component({
   selector: 'app-richtext',
@@ -29,12 +30,22 @@ export class RichtextComponent implements OnInit, OnDestroy{
   private editorService = inject(EditorService); //inject editorService using 'inject'
   content: Signal<string> = this.editorService.content // Bind signal directly
 
-  editor = this.editorService.getEditor()
+  readonly editor = this.editorService.editor;
 
   ngOnInit() {}
 
   ngOnDestroy(){
     this.editorService.destroyEditor();
+  }
+
+  
+  // Safe getter for editor
+  get safeEditor(): Editor {
+    const editorInstance = this.editorService.editor();
+    if (!editorInstance) {
+      throw new Error('Editor is not initialized');
+    }
+    return editorInstance;
   }
 
 }

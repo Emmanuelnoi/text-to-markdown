@@ -10,12 +10,14 @@ import TurndownService from 'turndown';
   providedIn: 'root'
 })
 export class EditorService {
-  private editor!: Editor;
-  private turndownService = new TurndownService();
 
   // Signal to track editor content
-  content: WritableSignal<string> = signal('');
-  markdownContent: WritableSignal<string> = signal(''); // store Markdown content
+  editor = signal<Editor | null>(null);
+  readonly content: WritableSignal<string> = signal('');
+  readonly markdownContent: WritableSignal<string> = signal(''); // store Markdown content
+
+
+  private turndownService = new TurndownService();
 
   constructor() {
     this.initializeEditor();
@@ -23,7 +25,7 @@ export class EditorService {
 
   // Initialize the Tiptap editor
   private initializeEditor(){
-      this.editor = new Editor({
+    const tiptapEditor = new Editor({
         extensions: [
           StarterKit,
           Placeholder,
@@ -36,49 +38,82 @@ export class EditorService {
           this.content.set(editor.getHTML()); // Update signal when content changes
         }
       });
+
+      this.editor.set(tiptapEditor); // // Store in signal
     }
 
   // Get the Tiptap editor instance
-  getEditor(): Editor {
-    return this.editor;
+  getEditor(): Editor | null {
+    return this.editor();
   }
 
-  // Update editor content
-  setContent(content: string) {
-    this.editor.commands.setContent(content);
-    this.content.set(content);
-  }
+ // Update editor content
+setContent(content: string) {
+  const instance = this.editor();
+  if (!instance) return;
 
-  // Get editor content
-  getContent(): string {
-    return this.content();
-  }
+  instance.commands.setContent(content);
+  this.content.set(content);
+}
 
-  // Clear editor content
-  clearContent() {
-    this.editor.commands.clearContent();
-    this.content.set('');
-  }
+// Get editor content
+getContent(): string {
+  return this.content(); // or use this.editor()?.getHTML()
+}
 
-  // Destroy editor when component is destroyed
-  destroyEditor() {
-    this.editor.destroy();
-  }
+// Clear editor content
+clearContent() {
+  const instance = this.editor();
+  if (!instance) return;
+
+  instance.commands.clearContent();
+  this.content.set('');
+}
+
+// Destroy editor when component is destroyed
+destroyEditor() {
+  const instance = this.editor();
+  if (!instance) return;
+
+  instance.destroy();
+  this.editor.set(null); // Important to reset the signal
+}
+
 
   // Convert Tiptap HTML to Markdown
   convertToMarkdown() {
-    this.markdownContent.set(this.turndownService.turndown(this.content()))
+    const html = this.content();
+    if (!html.trim()) return; // do nothing if empty
+  
+    this.markdownContent.set(this.turndownService.turndown(html));
   }
 
   // Copy Markdown to Clipboard
-  copyToClipboard(){
+  copyToClipboard() {
+    // Check if markdown content is not empty before copying
+    if (this.markdownContent() === '') {
+      alert('No content to copy. Please convert some text to Markdown first. ❌');
+      return;
+    }
+  
+    // Proceed to copy content to clipboard if it's not empty
     navigator.clipboard.writeText(this.markdownContent()).then(() => {
       alert('Markdown copied to clipboard! ✅');
+    }).catch(err => {
+      alert('Failed to copy markdown ❌');
+      console.error(err);
     });
   }
+  
 
   // Download Markdown to Clipboard
   downloadMarkdown(){
+    if (this.markdownContent() === '') {
+      alert('No content to Download. Please convert some text to Markdown first. ❌');
+      return;
+    }
+
+    // Proceed to Download conten if it's not empty
     const blob = new Blob([this.markdownContent()], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
