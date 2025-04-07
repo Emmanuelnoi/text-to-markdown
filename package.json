@@ -46,7 +46,7 @@
   "devDependencies": {
     "@angular-devkit/build-angular": "^19.2.3",
     "@angular/cli": "^19.2.3",
-    "@angular/compiler-cli": "^19.2.0",
+    "@angular/compiler-cli": "^19.2.5",
     "@spartan-ng/cli": "^0.0.1-alpha.427",
     "@tiptap/core": "^2.11.5",
     "@tiptap/extension-bubble-menu": "^2.11.5",
