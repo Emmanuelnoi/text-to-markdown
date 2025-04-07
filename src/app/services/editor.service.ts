@@ -1,10 +1,11 @@
-import { Injectable, signal, WritableSignal } from '@angular/core';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { Editor } from '@tiptap/core';
 import Placeholder from '@tiptap/extension-placeholder';
 import TiptapUnderline from '@tiptap/extension-underline'
 import TiptapHeading from '@tiptap/extension-heading';
 import StarterKit from '@tiptap/starter-kit';
 import TurndownService from 'turndown';
+import { AlertService } from './alert.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,7 @@ export class EditorService {
 
 
   private turndownService = new TurndownService();
+  private alertService = inject(AlertService);
 
   constructor() {
     this.initializeEditor();
@@ -80,68 +82,77 @@ destroyEditor() {
 }
 
 
-  // Convert Tiptap HTML to Markdown
-  // convertToMarkdown() {
-  //   const html = this.content();
-  //   if (!html.trim()) return; // do nothing if empty
-  
-  //   this.markdownContent.set(this.turndownService.turndown(html));
-  // }
-
+  // Convert content to markdown
   convertToMarkdown(): void {
-    const html = this.content().trim();
-
-    if (!html) {
-      alert('No content to convert to Markdown.');
+    const html = this.content();
+    if (!html.trim()) {
+      this.markdownContent.set('');
       return;
     }
 
-    try {
-      const markdown = this.turndownService.turndown(html);
-      this.markdownContent.set(markdown);
-    } catch (error) {
-      console.error('Markdown conversion failed:', error);
-      alert('Something went wrong while converting.');
-    }
+    const markdown = this.turndownService.turndown(html);
+    this.markdownContent.set(markdown);
   }
 
-  // Copy Markdown to Clipboard
-  copyToClipboard() {
-    // Check if markdown content is not empty before copying
-    if (this.markdownContent() === '') {
-      alert('No content to copy. Please convert some text to Markdown first. ❌');
+  convertAndCopyMarkdown(): void {
+    const html = this.content();
+  
+    if (!html.trim()) {
+      this.markdownContent.set('');
+      this.alertService.info('No content to copy. Please enter some text first.', 'info');
       return;
     }
   
-    // Proceed to copy content to clipboard if it's not empty
-    navigator.clipboard.writeText(this.markdownContent()).then(() => {
-      alert('Markdown copied to clipboard! ✅');
+    const markdown = this.turndownService.turndown(html);
+    this.markdownContent.set(markdown);
+  
+    navigator.clipboard.writeText(markdown).then(() => {
+      this.alertService.success('Markdown converted and copied to clipboard! ✅', 'success');
     }).catch(err => {
-      alert('Failed to copy markdown ❌');
-      console.error(err);
+      console.error('Clipboard error:', err);
+      this.alertService.error('Failed to copy Markdown', 'error');
     });
   }
   
-
-  // Download Markdown to Clipboard
-  downloadMarkdown(){
-    if (this.markdownContent() === '') {
-      alert('No content to Download. Please convert some text to Markdown first. ❌');
+  convertAndDownloadMarkdown(): void {
+    const html = this.content();
+  
+    if (!html.trim()) {
+      this.markdownContent.set('');
+      this.alertService.info('No content to download. Please enter some text first.', 'info');
       return;
     }
-
-    // Proceed to Download conten if it's not empty
-    const blob = new Blob([this.markdownContent()], { type: 'text/markdown' });
+  
+    const markdown = this.turndownService.turndown(html);
+    this.markdownContent.set(markdown);
+  
+    const blob = new Blob([markdown], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = 'converted.md';
     a.click();
     URL.revokeObjectURL(url);
+  
+    this.alertService.success('Markdown converted and downloaded successfully!', 'success');
   }
+  
   
    // Get Markdown content
    getMarkdown(): string {
     return this.markdownContent();
+  }
+
+
+  showSuccessAlert() {
+    this.alertService.success('Operation Successful!', 'success');
+  }
+
+  showErrorAlert() {
+    this.alertService.error('Something went wrong!', 'error');
+  }
+
+  showInfoAlert() {
+    this.alertService.info('No content to convert to Markdown.', 'info');
   }
 }

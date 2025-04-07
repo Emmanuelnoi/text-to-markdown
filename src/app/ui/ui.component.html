@@ -4,72 +4,56 @@
     <p class="text-lg text-gray-600">Quickly convert your rich formatted text to Markdown</p>
   </div>
   
-  <div class="max-w-3xl w-full"> 
-    <div class="flex justify-between mb-2">
+  <!-- Alert UI -->
+   <app-alert-container></app-alert-container>
+
+  <div class="mt-6 w-full flex justify-center max-w-3xl"> 
       <!-- Placeholder for keyboard shortcut button -->
       <div class="tooltip-container">
         <span class="tooltip-text">Nothing yet</span>
       </div>
-    
-      <div class="flex gap-2">
-        <!-- Convert to Markdown button -->
-        <div class="tooltip-container">
-          <button 
-            class="custom-button"
-            aria-label="Convert to Markdown"
-            (click)="convertMarkdown()">
-            <lucide-angular [img]="RefreshCcw"></lucide-angular>
-          </button>
-          <span class="tooltip-text">Convert to Markdown</span>
-        </div>
 
-        <!-- Copy to Clipboard button -->
-        <div class="tooltip-container">
-          <button 
-            class="custom-button"
-            aria-label="Copy to clipboard"
-            (click)="copyToClipboard()">
-            <lucide-angular [img]="ClipboardCopy"></lucide-angular>
-          </button>
-          <span class="tooltip-text">Copy Markdown</span>
+      <div class="editor-container">
+        <!-- RichText Editor Component -->
+        <div class="editor-wrapper">
+          <app-richtext #editor></app-richtext>
         </div>
-
-        <!-- Download button -->
-        <div class="tooltip-container">
-          <button 
-            class="custom-button"
-            aria-label="Download"
-            (click)="downloadMarkdown()">
-            <lucide-angular [img]="ArrowDownToLine"></lucide-angular>
-          </button>
-          <span class="tooltip-text">Download as .md File</span>
-        </div>
-
-        <!-- Help button -->
-        <div class="tooltip-container">
-          <button 
-            class="custom-button"
-            aria-label="Help"
-            (click)="showHelp()">
-            <lucide-angular [img]="BadgeHelp"></lucide-angular>
-          </button>
-          <span class="tooltip-text">Help</span>
-          <ng-container *ngIf="isComponentVisible()">
-            <app-guide></app-guide>
-          </ng-container>
+      
+        <!-- Sticky Vertical Button Group -->
+        <div class="sticky-buttons">
+          <div class="tooltip-container">
+            <button 
+              class="custom-button"
+              aria-label="Copy to clipboard"
+              (click)="copyMarkdown()">
+              <lucide-angular [img]="ClipboardCopy"></lucide-angular>
+            </button>
+            <span class="tooltip-text">Copy Markdown</span>
+          </div>
+      
+          <div class="tooltip-container">
+            <button 
+              class="custom-button"
+              aria-label="Download"
+              (click)="downloadMarkdown()">
+              <lucide-angular [img]="ArrowDownToLine"></lucide-angular>
+            </button>
+            <span class="tooltip-text">Download as .md File</span>
+          </div>
+      
+          <div class="tooltip-container">
+            <button 
+              class="custom-button"
+              aria-label="Help"
+              (click)="showHelp()">
+              <lucide-angular [img]="BadgeHelp"></lucide-angular>
+            </button>
+            <span class="tooltip-text">Help</span>
+            <ng-container *ngIf="isComponentVisible()">
+              <app-guide></app-guide>
+            </ng-container>
+          </div>
         </div>
       </div>
-    </div>
-
-    <!-- RichText Editor Component -->
-    <app-richtext #editor></app-richtext>
-
-    
-    <!-- Show Markdown content only if showMarkdown() is true -->
-    <ng-container *ngIf="showMarkdown()">
-      <div #markdownPreview class="markDown-title">Markdown</div>
-      <pre class="custom-box">{{ markdownContent() }}</pre>
-    
-    </ng-container>
   </div>
 </div>

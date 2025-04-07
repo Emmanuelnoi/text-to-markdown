@@ -5,12 +5,14 @@ import { EditorService } from '../services/editor.service';
 import { CommonModule } from '@angular/common';
 import { ComponentStateService } from '../services/component-state.service';
 import { GuideComponent } from "../guide/guide.component";
+import { AlertService } from '../services/alert.service';
+import { AlertContainerComponent } from "../alert-container/alert-container.component";
 
 @Component({
   selector: 'app-ui',
   imports: [CommonModule,
     LucideAngularModule,
-    RichtextComponent, GuideComponent],
+    RichtextComponent, GuideComponent, AlertContainerComponent],
   templateUrl: './ui.component.html',
   styleUrl: './ui.component.css'
 })
@@ -24,6 +26,8 @@ export class UiComponent implements OnInit, OnDestroy{
   private editorService = inject(EditorService); // inject editorService using 'inject'
   private componentStateService = inject(ComponentStateService); // inject componentStateService using 'inject'
   private cd = inject(ChangeDetectorRef);
+  private alertService = inject(AlertService);
+
 
   @ViewChild('markdownPreview', { static: false}) markdownPreviewRef!: ElementRef<HTMLElement>;
 
@@ -40,36 +44,10 @@ export class UiComponent implements OnInit, OnDestroy{
     this.editorService.destroyEditor();
   }
 
-  // Convert to Markdown
-  async convertMarkdown() {
-    const contentValue = this.content();
-  
-    if (contentValue.trim() === '') {
-      alert('No content to convert to Markdown.');
-      return;
-    }
-  
-    this.isLoading.set(true);
-  
-    try {
-      await this.editorService.convertToMarkdown();
-  
-      // Allow DOM to update before scrolling
-      setTimeout(() => {
-        if (this.markdownPreviewRef?.nativeElement) {
-          this.markdownPreviewRef.nativeElement.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-        }
-      }, 100);
-    } catch (error) {
-      console.error('Markdown conversion failed', error);
-      alert('An error occurred while converting to Markdown.');
-    } finally {
-      this.isLoading.set(false);
-    }
+  copyMarkdown() {
+    this.editorService.convertAndCopyMarkdown();
   }
+  
   
   ngAfterViewInit() {
     // safe to scroll or use ViewChild here
@@ -85,18 +63,11 @@ export class UiComponent implements OnInit, OnDestroy{
     }
   }
 
-  // Show keyboard shortcuts
-  showKeyboardShortcuts() {}
-
-  // Copy Markdown to Clipboard
-  copyToClipboard() {
-    this.editorService.copyToClipboard();
-  }
-
   // Download Markdown to Clipboard
   downloadMarkdown() {
-    this.editorService.downloadMarkdown();
+    this.editorService.convertAndDownloadMarkdown();
   }
+  
 
   // Show markdown content if it's not empty
   showMarkdown(): boolean {
