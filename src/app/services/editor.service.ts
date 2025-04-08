@@ -3,6 +3,16 @@ import { Editor } from '@tiptap/core';
 import Placeholder from '@tiptap/extension-placeholder';
 import TiptapUnderline from '@tiptap/extension-underline'
 import TiptapHeading from '@tiptap/extension-heading';
+import Code from '@tiptap/extension-code';
+import Link from '@tiptap/extension-link';
+import Blockquote from '@tiptap/extension-blockquote'
+import Document from '@tiptap/extension-document'
+import Paragraph from '@tiptap/extension-paragraph'
+import Text from '@tiptap/extension-text'
+import BulletList from '@tiptap/extension-bullet-list'
+import ListItem from '@tiptap/extension-list-item'
+import OrderedList from '@tiptap/extension-ordered-list'
+import CodeBlockLowlight from '@tiptap/extension-code-block'
 import StarterKit from '@tiptap/starter-kit';
 import TurndownService from 'turndown';
 import { AlertService } from './alert.service';
@@ -11,6 +21,8 @@ import { AlertService } from './alert.service';
   providedIn: 'root'
 })
 export class EditorService {
+
+  
 
   // Signal to track editor content
   editor = signal<Editor | null>(null);
@@ -30,10 +42,20 @@ export class EditorService {
     const tiptapEditor = new Editor({
         extensions: [
           StarterKit,
-          Placeholder,
+          Placeholder.configure({
+            placeholder: 'Start writing your markdown-friendly rich text...',
+          }),
           TiptapUnderline,
+          Code,
+          Link,
+          Document,
+          Paragraph,
+          Text,
+          Blockquote,
+          BulletList, OrderedList, ListItem,
+          CodeBlockLowlight,
           TiptapHeading.configure({
-            levels: [1],
+            levels: [1,2,3,4,5,6],
           })
         ],
         onUpdate: ({ editor }) => {
@@ -42,7 +64,7 @@ export class EditorService {
       });
 
       this.editor.set(tiptapEditor); // // Store in signal
-    }
+  }
 
   // Get the Tiptap editor instance
   getEditor(): Editor | null {

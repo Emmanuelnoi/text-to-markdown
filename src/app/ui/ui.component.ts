@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, inject, OnDestroy, OnInit, signal, Signal, ViewChild, WritableSignal } from '@angular/core';
-import { LucideAngularModule, Keyboard, ClipboardCopy, ArrowDownToLine, BadgeHelp,RefreshCcw } from 'lucide-angular';
+import { LucideAngularModule, Keyboard, ClipboardCopy, ArrowDownToLine, BadgeHelp,RefreshCcw, X } from 'lucide-angular';
 import { RichtextComponent } from "../richtext/richtext.component";
 import { EditorService } from '../services/editor.service';
 import { CommonModule } from '@angular/common';
@@ -22,6 +22,7 @@ export class UiComponent implements OnInit, OnDestroy{
   readonly ArrowDownToLine = ArrowDownToLine;
   readonly BadgeHelp = BadgeHelp;
   readonly RefreshCcw = RefreshCcw;
+  readonly X = X;
 
   private editorService = inject(EditorService); // inject editorService using 'inject'
   private componentStateService = inject(ComponentStateService); // inject componentStateService using 'inject'

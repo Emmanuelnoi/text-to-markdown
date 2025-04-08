@@ -46,6 +46,15 @@
       >
         <lucide-angular [img]="Underline" class="my-icon"></lucide-angular>
       </button>
+
+      <button
+        type="button"
+        class="px-1 hover:text-white"
+        (click)="safeEditor.chain().focus().toggleCode().run()"
+        [ngClass]="{ 'bg-gray-900 text-white': safeEditor.isActive('code') }"
+      >
+        <lucide-angular [img]="Code" class="my-icon"></lucide-angular>
+      </button>
     </div>
   </tiptap-bubble-menu>
 </ng-container>

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule, Heading, Bold, Italic, Strikethrough,Underline } from 'lucide-angular';
+import { LucideAngularModule, Heading, Bold, Italic, Strikethrough, Underline, Code } from 'lucide-angular';
 
 import { TiptapBubbleMenuDirective, TiptapEditorDirective } from 'ngx-tiptap';
 import { EditorService } from '../services/editor.service';
@@ -26,6 +26,7 @@ export class RichtextComponent implements OnInit, OnDestroy{
   readonly Italic = Italic;
   readonly Strikethrough = Strikethrough;
   readonly Underline = Underline;
+  readonly Code = Code;
 
   private editorService = inject(EditorService); //inject editorService using 'inject'
   content: Signal<string> = this.editorService.content // Bind signal directly

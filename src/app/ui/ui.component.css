@@ -96,7 +96,7 @@
 
 .editor-wrapper {
   flex: 1;
-  min-height: 500px; /* Reset height */
+  min-height: 300px; /* Reset height */
 }
 
 .sticky-buttons {

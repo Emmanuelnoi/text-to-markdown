@@ -3,6 +3,8 @@
 @import "tailwindcss";
 @import '@spartan-ng/brain/hlm-tailwind-preset.css';
 @import '@angular/cdk/overlay-prebuilt.css';
+@import 'prismjs/themes/prism.css';
+
 
 /* @layer base {
   * {
@@ -63,7 +65,7 @@ svg.my-icon {
 
 .bubble-menu button.active {
   color: #007bff;
-  background: rgba(0, 123, 255, 0.1);
+  background: rgba(202, 203, 204, 0.1);
 }
 
 .bubble-menu button lucide-angular {
@@ -71,3 +73,45 @@ svg.my-icon {
   height: 20px;
 }
 
+
+pre {
+  padding: 16px;
+  background-color: #f1f1f1;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-family: 'Courier New', Courier, monospace;
+  /* color: white; */
+  line-height: 1.5;
+}
+
+code {
+  font-family: inherit;
+  background-color: #f5f2f0;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+
+/* .token.comment, .token.prolog, .token.doctype, .token.cdata {
+  color: slategray;
+}
+
+'Courier New', Courier, monospace;
+
+.token.punctuation {
+  color: #999;
+}
+
+.token.keyword {
+  color: #d73a49;
+  font-weight: bold;
+}
+
+.token.selector {
+  color: #6f42c1;
+}
+
+.token.property {
+  color: #d19a66;
+}
+ */
