@@ -1,10 +1,9 @@
-import { ChangeDetectorRef, Component, ElementRef, inject, OnDestroy, OnInit, signal, Signal, ViewChild, WritableSignal } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, inject, OnDestroy, signal, Signal, ViewChild, WritableSignal, AfterViewInit } from '@angular/core';
 import { LucideAngularModule, Keyboard, ClipboardCopy, ArrowDownToLine, BadgeHelp,RefreshCcw, X } from 'lucide-angular';
 import { RichtextComponent } from "../richtext/richtext.component";
 import { EditorService } from '../services/editor.service';
 import { CommonModule } from '@angular/common';
 import { ComponentStateService } from '../services/component-state.service';
-import { GuideComponent } from "../guide/guide.component";
 import { AlertService } from '../services/alert.service';
 import { AlertContainerComponent } from "../alert-container/alert-container.component";
 
@@ -12,11 +11,11 @@ import { AlertContainerComponent } from "../alert-container/alert-container.comp
   selector: 'app-ui',
   imports: [CommonModule,
     LucideAngularModule,
-    RichtextComponent, GuideComponent, AlertContainerComponent],
+    RichtextComponent, AlertContainerComponent],
   templateUrl: './ui.component.html',
   styleUrl: './ui.component.css'
 })
-export class UiComponent implements OnInit, OnDestroy{
+export class UiComponent implements OnDestroy, AfterViewInit{
   readonly Keyboard = Keyboard;
   readonly ClipboardCopy = ClipboardCopy;
   readonly ArrowDownToLine = ArrowDownToLine;
@@ -39,7 +38,6 @@ export class UiComponent implements OnInit, OnDestroy{
   markdownContent: WritableSignal<string> = this.editorService.markdownContent; // Get markdown content
   isLoading = signal(false); // Track loading state
 
-  ngOnInit() {}
 
   ngOnDestroy() {
     this.editorService.destroyEditor();

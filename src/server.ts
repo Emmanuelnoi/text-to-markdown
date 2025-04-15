@@ -1,12 +1,3 @@
-import {
-  AngularNodeAppEngine,
-  createNodeRequestHandler,
-  isMainModule,
-  writeResponseToNodeResponse,
-} from '@angular/ssr/node';
-import express from 'express';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
 import { getContext } from '@netlify/angular-runtime/context.mjs'

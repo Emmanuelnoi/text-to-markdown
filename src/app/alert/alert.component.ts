@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnInit, Output, signal, WritableSignal } from '@angular/core';
-import { AlertService } from '../services/alert.service';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
 
 export type AlertType = 'success' | 'warning' | 'error' | 'info';
@@ -23,9 +22,8 @@ export type AlertType = 'success' | 'warning' | 'error' | 'info';
   styleUrl: './alert.component.css'
 })
 export class AlertComponent {
-@Input() type: AlertType = 'info';
-@Input() title: string = '';
-@Input() message: string = '';
-@Output() close = new EventEmitter<void>();
-
+  @Input() type: AlertType = 'info';
+  @Input() title = '';
+  @Input() message = '';
+  @Output() customClose = new EventEmitter<void>();
 }

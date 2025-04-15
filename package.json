@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:markdown_converter": "node dist/markdown_converter/server/server.mjs"
+    "serve:ssr:markdown_converter": "node dist/markdown_converter/server/server.mjs",
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {
@@ -49,6 +50,8 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^19.2.5",
+    "@angular-eslint/eslint-plugin": "^19.3.0",
+    "@angular-eslint/template-parser": "^19.3.0",
     "@angular/cli": "^19.2.5",
     "@angular/compiler-cli": "^19.2.5",
     "@tiptap/core": "^2.11.5",
@@ -61,7 +64,11 @@
     "@types/jasmine": "~5.1.0",
     "@types/node": "^18.18.0",
     "@types/turndown": "^5.0.5",
+    "@typescript-eslint/eslint-plugin": "^8.30.1",
+    "@typescript-eslint/parser": "^8.30.1",
+    "angular-eslint": "19.3.0",
     "autoprefixer": "^10.4.21",
+    "eslint": "^9.24.0",
     "jasmine-core": "~5.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
@@ -72,6 +79,7 @@
     "tailwind-merge": "^2.2.0",
     "tailwindcss": "^4.0.15",
     "tailwindcss-animate": "^1.0.6",
-    "typescript": "~5.7.2"
+    "typescript": "~5.7.2",
+    "typescript-eslint": "8.27.0"
   }
 }

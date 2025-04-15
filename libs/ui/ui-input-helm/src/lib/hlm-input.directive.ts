@@ -51,9 +51,9 @@ export class HlmInputDirective implements BrnFormFieldControl, DoCheck {
 		error: signal(this.error()),
 	}));
 
-	public readonly userClass = input<ClassValue>('', { alias: 'class' });
+	public readonly hlmClass = input<ClassValue>('');
 	protected readonly _computedClass = computed(() =>
-		hlm(inputVariants({ size: this.size(), error: this.state().error() }), this.userClass()),
+		hlm(inputVariants({ size: this.size(), error: this.state().error() }), this.hlmClass()),
 	);
 
 	private readonly _injector = inject(Injector);

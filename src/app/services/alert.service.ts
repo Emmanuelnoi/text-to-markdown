@@ -1,4 +1,4 @@
-import { Injectable, signal, WritableSignal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { AlertType } from '../alert/alert.component';
 
 export interface Alert {

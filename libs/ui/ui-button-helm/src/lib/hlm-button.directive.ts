@@ -44,10 +44,10 @@ export class HlmButtonDirective {
 
 	private readonly _additionalClasses = signal<ClassValue>('');
 
-	public readonly userClass = input<ClassValue>('', { alias: 'class' });
+	public readonly hlmClass = input<ClassValue>('');
 
 	protected readonly _computedClass = computed(() =>
-		hlm(buttonVariants({ variant: this.variant(), size: this.size() }), this.userClass(), this._additionalClasses()),
+		hlm(buttonVariants({ variant: this.variant(), size: this.size() }), this.hlmClass(), this._additionalClasses()),
 	);
 
 	public readonly variant = input<ButtonVariants['variant']>(this._config.variant);

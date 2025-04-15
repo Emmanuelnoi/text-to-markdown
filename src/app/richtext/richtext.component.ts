@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnDestroy, OnInit, Signal } from '@angular/core';
+import { Component, inject, OnDestroy, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule, Heading, Bold, Italic, Strikethrough, Underline, Code } from 'lucide-angular';
 
@@ -19,7 +19,7 @@ import { Editor } from '@tiptap/core';
   templateUrl: './richtext.component.html',
   styleUrl: './richtext.component.css'
 })
-export class RichtextComponent implements OnInit, OnDestroy{
+export class RichtextComponent implements OnDestroy{
 
   readonly Heading = Heading;
   readonly Bold = Bold;
@@ -32,8 +32,6 @@ export class RichtextComponent implements OnInit, OnDestroy{
   content: Signal<string> = this.editorService.content // Bind signal directly
 
   readonly editor = this.editorService.editor;
-
-  ngOnInit() {}
 
   ngOnDestroy(){
     this.editorService.destroyEditor();
