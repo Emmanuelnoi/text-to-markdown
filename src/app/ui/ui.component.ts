@@ -1,21 +1,45 @@
-import { ChangeDetectorRef, Component, ElementRef, inject, OnDestroy, signal, Signal, ViewChild, WritableSignal, AfterViewInit } from '@angular/core';
-import { LucideAngularModule, Keyboard, ClipboardCopy, ArrowDownToLine, BadgeHelp,RefreshCcw, X } from 'lucide-angular';
-import { RichtextComponent } from "../richtext/richtext.component";
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  inject,
+  OnDestroy,
+  signal,
+  Signal,
+  ViewChild,
+  WritableSignal,
+  AfterViewInit,
+} from '@angular/core';
+import {
+  LucideAngularModule,
+  Keyboard,
+  ClipboardCopy,
+  ArrowDownToLine,
+  BadgeHelp,
+  RefreshCcw,
+  X,
+} from 'lucide-angular';
+import { RichtextComponent } from '../richtext/richtext.component';
 import { EditorService } from '../services/editor.service';
 import { CommonModule } from '@angular/common';
 import { ComponentStateService } from '../services/component-state.service';
 import { AlertService } from '../services/alert.service';
-import { AlertContainerComponent } from "../alert-container/alert-container.component";
+import { AlertContainerComponent } from '../alert-container/alert-container.component';
+import { HelpsectionComponent } from '../helpsection/helpsection.component';
 
 @Component({
   selector: 'app-ui',
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     LucideAngularModule,
-    RichtextComponent, AlertContainerComponent],
+    RichtextComponent,
+    AlertContainerComponent,
+    HelpsectionComponent,
+  ],
   templateUrl: './ui.component.html',
-  styleUrl: './ui.component.css'
+  styleUrl: './ui.component.css',
 })
-export class UiComponent implements OnDestroy, AfterViewInit{
+export class UiComponent implements OnDestroy, AfterViewInit {
   readonly Keyboard = Keyboard;
   readonly ClipboardCopy = ClipboardCopy;
   readonly ArrowDownToLine = ArrowDownToLine;
@@ -28,16 +52,13 @@ export class UiComponent implements OnDestroy, AfterViewInit{
   private cd = inject(ChangeDetectorRef);
   private alertService = inject(AlertService);
 
-
-  @ViewChild('markdownPreview', { static: false}) markdownPreviewRef!: ElementRef<HTMLElement>;
-
+  @ViewChild('markdownPreview', { static: false }) markdownPreviewRef!: ElementRef<HTMLElement>;
 
   // Accessing the signal from the service
   isComponentVisible = this.componentStateService.getComponentVisibility();
   content: Signal<string> = this.editorService.content; // Get editor content
   markdownContent: WritableSignal<string> = this.editorService.markdownContent; // Get markdown content
   isLoading = signal(false); // Track loading state
-
 
   ngOnDestroy() {
     this.editorService.destroyEditor();
@@ -46,19 +67,15 @@ export class UiComponent implements OnDestroy, AfterViewInit{
   copyMarkdown() {
     this.editorService.convertAndCopyMarkdown();
   }
-  
-  
+
   ngAfterViewInit() {
     // safe to scroll or use ViewChild here
-    this.scrollToPreview()
+    this.scrollToPreview();
   }
 
   scrollToPreview() {
     if (this.markdownPreviewRef) {
-      this.markdownPreviewRef.nativeElement.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
+      this.markdownPreviewRef.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 
@@ -66,7 +83,6 @@ export class UiComponent implements OnDestroy, AfterViewInit{
   downloadMarkdown() {
     this.editorService.convertAndDownloadMarkdown();
   }
-  
 
   // Show markdown content if it's not empty
   showMarkdown(): boolean {
@@ -75,7 +91,7 @@ export class UiComponent implements OnDestroy, AfterViewInit{
 
   // Show help
   showHelp() {
-    this.componentStateService.toggleVisibility()
+    this.componentStateService.toggleVisibility();
     this.cd.detectChanges(); // Force change detection
   }
 
@@ -85,4 +101,3 @@ export class UiComponent implements OnDestroy, AfterViewInit{
     this.markdownContent.set(''); // Reset markdown content to empty string
   }
 }
-

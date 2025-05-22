@@ -1,0 +1,54 @@
+<div class="flex flex-col items-center w-full">
+  <div class="w-full max-w-3xl mx-auto">
+    <h2 class="text-3xl font-bold text-center mb-2">{{ title }}</h2>
+    <div
+      class="w-full max-w-3xl mx-auto rounded-xl overflow-hidden bg-white shadow-md border border-gray-200">
+      @for (item of items; track item.id) {
+        <div class="border-b border-gray-200 last:border-0">
+          <button
+            (click)="toggleItem(item.id)"
+            class="flex items-center justify-between w-full p-4 text-left focus:outline-none bg-gray-50 hover:bg-gray-100 transition-colors"
+            [attr.aria-expanded]="openItem === item.id"
+            [attr.aria-controls]="'content-' + item.id">
+            <span class="font-medium text-gray-900">{{ item.title }}</span>
+            <span class="text-gray-500">
+              @if (openItem === item.id) {
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="m18 15-6-6-6 6" />
+                </svg>
+              } @else {
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              }
+            </span>
+          </button>
+          <div
+            id="content-{{ item.id }}"
+            class="transition-all duration-300 ease-in-out overflow-hidden bg-white"
+            [style.max-height.px]="openItem === item.id ? 1000 : 0">
+            <div class="p-4 text-gray-700">{{ item.content }}</div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

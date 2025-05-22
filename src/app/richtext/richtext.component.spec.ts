@@ -7,10 +7,7 @@ describe('MenuComponent', () => {
   let fixture: ComponentFixture<RichtextComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [RichtextComponent]
-    })
-    .compileComponents();
+    await TestBed.configureTestingModule({ imports: [RichtextComponent] }).compileComponents();
 
     fixture = TestBed.createComponent(RichtextComponent);
     component = fixture.componentInstance;

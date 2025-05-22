@@ -1,8 +1,6 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ComponentStateService {
   // Signal to track the visibility of the component
   private isComponentVisible: WritableSignal<boolean> = signal(false);
@@ -13,6 +11,6 @@ export class ComponentStateService {
   }
 
   toggleVisibility(): void {
-    this.isComponentVisible.update((prevState) => !prevState);
+    this.isComponentVisible.update(prevState => !prevState);
   }
 }

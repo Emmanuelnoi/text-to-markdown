@@ -6,8 +6,7 @@
         type="button"
         class="px-1 hover:text-white"
         (click)="safeEditor.chain().focus().toggleHeading({ level: 1 }).run()"
-        [ngClass]="{ 'bg-gray-900 text-white': safeEditor.isActive('heading', { level: 1 }) }"
-      >
+        [ngClass]="{ 'bg-gray-900 text-white': safeEditor.isActive('heading', { level: 1 }) }">
         <lucide-angular [img]="Heading" class="my-icon"></lucide-angular>
       </button>
 
@@ -15,8 +14,7 @@
         type="button"
         class="px-1 hover:text-white"
         (click)="safeEditor.chain().focus().toggleBold().run()"
-        [ngClass]="{ 'bg-gray-900 text-white': safeEditor.isActive('bold') }"
-      >
+        [ngClass]="{ 'bg-gray-900 text-white': safeEditor.isActive('bold') }">
         <lucide-angular [img]="Bold" class="my-icon"></lucide-angular>
       </button>
 
@@ -24,8 +22,7 @@
         type="button"
         class="px-1 hover:text-white"
         (click)="safeEditor.chain().focus().toggleItalic().run()"
-        [ngClass]="{ 'bg-gray-900 text-white': safeEditor.isActive('italic') }"
-      >
+        [ngClass]="{ 'bg-gray-900 text-white': safeEditor.isActive('italic') }">
         <lucide-angular [img]="Italic" class="my-icon"></lucide-angular>
       </button>
 
@@ -33,8 +30,7 @@
         type="button"
         class="px-1 hover:text-white"
         (click)="safeEditor.chain().focus().toggleStrike().run()"
-        [ngClass]="{ 'bg-gray-900 text-white': safeEditor.isActive('strike') }"
-      >
+        [ngClass]="{ 'bg-gray-900 text-white': safeEditor.isActive('strike') }">
         <lucide-angular [img]="Strikethrough" class="my-icon"></lucide-angular>
       </button>
 
@@ -42,8 +38,7 @@
         type="button"
         class="px-1 hover:text-white"
         (click)="safeEditor.chain().focus().toggleUnderline().run()"
-        [ngClass]="{ 'bg-gray-900 text-white': safeEditor.isActive('underline') }"
-      >
+        [ngClass]="{ 'bg-gray-900 text-white': safeEditor.isActive('underline') }">
         <lucide-angular [img]="Underline" class="my-icon"></lucide-angular>
       </button>
 
@@ -51,12 +46,9 @@
         type="button"
         class="px-1 hover:text-white"
         (click)="safeEditor.chain().focus().toggleCode().run()"
-        [ngClass]="{ 'bg-gray-900 text-white': safeEditor.isActive('code') }"
-      >
+        [ngClass]="{ 'bg-gray-900 text-white': safeEditor.isActive('code') }">
         <lucide-angular [img]="Code" class="my-icon"></lucide-angular>
       </button>
     </div>
   </tiptap-bubble-menu>
 </ng-container>
-
-

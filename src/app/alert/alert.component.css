@@ -72,12 +72,12 @@
   .alert {
     flex-direction: column;
   }
-  
+
   .alert-icon {
     margin-bottom: 0.5rem;
     margin-right: 0;
   }
-  
+
   .alert-close {
     position: absolute;
     top: 0.75rem;

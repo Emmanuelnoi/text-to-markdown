@@ -5,12 +5,12 @@ import { Component, signal } from '@angular/core';
   selector: 'app-guide',
   imports: [CommonModule],
   templateUrl: './guide.component.html',
-  styleUrl: './guide.component.css'
+  styleUrl: './guide.component.css',
 })
 export class GuideComponent {
-  isOpen = signal(true)
+  isOpen = signal(true);
 
   closeModal() {
-    this.isOpen.set(false)
+    this.isOpen.set(false);
   }
 }

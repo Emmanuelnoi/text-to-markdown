@@ -4,8 +4,5 @@ export * from './lib/hlm-button.token';
 
 export * from './lib/hlm-button.directive';
 
-@NgModule({
-	imports: [HlmButtonDirective],
-	exports: [HlmButtonDirective],
-})
+@NgModule({ imports: [HlmButtonDirective], exports: [HlmButtonDirective] })
 export class HlmButtonModule {}

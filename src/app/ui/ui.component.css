@@ -1,90 +1,94 @@
 ::ng-deep .ProseMirror {
-    margin-bottom: 5rem;
-    padding: 2.5rem;
-    border: 0px solid black;
-    border-radius: 0.375rem;
-    outline: none;                   /* outline-none */
-    background-color: rgb(255, 255, 255);
-    transition: border-color 0.2s;
-  }
-  
-  ::ng-deep .ProseMirror:hover {
-    border-color: #1d4ed8;
-  }
-  
-  ::ng-deep .ProseMirror:focus {
-    border-color: #b91c1c;
-  } 
-  
+  min-height: 150px;
+  margin-bottom: 5rem;
+  padding: 2.5rem;
+  border: none;
+  border-radius: 0.375rem;
+  outline: none; /* outline-none */
+  background-color: rgb(255, 255, 255);
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  width: 100%;
+}
 
-  .custom-button {
-    height: 2.5rem;
-    width: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.375rem;
-    background-color: #ffff;
-    cursor: pointer;
-    transition: background-color 0.2s ease; /* smooth hover transition */
-  }
-  
-  .custom-button:hover {
-    color: #f60606;
-  }
+::ng-deep .ProseMirror:hover {
+  border-color: #1d4ed8;
+}
 
-  .custom-box {
-    overflow: hidden; /* Hides any overflowing content */
-    white-space: pre-wrap; /* Ensures text wraps within the container */
-    word-wrap: break-word; /* Breaks long words */
-    max-width: 100%; /* Prevents overflow beyond container */
-    padding: 2.5rem;
-    margin-top: 0.25rem;
-    border: 1px solid black;
-    border-color: #71f494;
-    border-radius: 0.375rem;
-    outline: none;
-    background-color: #ffff;
-  }
-  
-  .tooltip-container {
-    position: relative;
-    display: inline-block;
-  }
-  
-  .tooltip-text {
-    visibility: hidden;
-    position: absolute;
-    bottom: 100%; /* Position above the button */
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #ffffff;
-    color: #6b7280; 
-    border: 1px solid #d1d5db; 
-    padding: 0.4rem;
-    border-radius: 0.375rem;
-    margin-bottom: 0.4rem;
-    text-align: center;
-    font-size: 0.875rem; 
-    white-space: nowrap;
-    z-index: 1;
-    transition: opacity 0.3s;
-  }
-  
-  .tooltip-container:hover .tooltip-text {
-    visibility: visible;
-    opacity: 1;
-  }
-  
-  .markDown-title {
-    margin-top: 1rem;
-    font-size: 2rem;
-    font-weight: 600;
-    letter-spacing: -0.025em;
-    color: #111827;
-  }
+::ng-deep .ProseMirror:focus {
+  border-color: #b91c1c;
+}
 
-  .editor-container {
+.custom-button {
+  height: 2.5rem;
+  width: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  background-color: #ffff;
+  cursor: pointer;
+  transition: background-color 0.2s ease; /* smooth hover transition */
+}
+
+.custom-button:hover {
+  color: #f60606;
+}
+
+.custom-box {
+  overflow: hidden; /* Hides any overflowing content */
+  white-space: pre-wrap; /* Ensures text wraps within the container */
+  word-wrap: break-word; /* Breaks long words */
+  max-width: 100%; /* Prevents overflow beyond container */
+  padding: 2.5rem;
+  margin-top: 0.25rem;
+  border: 1px solid black;
+  border-color: #71f494;
+  border-radius: 0.375rem;
+  outline: none;
+  background-color: #ffff;
+}
+
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  bottom: 100%; /* Position above the button */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ffffff;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+  padding: 0.4rem;
+  border-radius: 0.375rem;
+  margin-bottom: 0.4rem;
+  text-align: center;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  z-index: 1;
+  transition: opacity 0.3s;
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+.markDown-title {
+  margin-top: 1rem;
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: #111827;
+}
+
+.editor-container {
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -108,5 +112,3 @@
   align-items: center;
   z-index: 50;
 }
-
-  

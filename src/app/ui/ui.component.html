@@ -1,46 +1,37 @@
 <div class="min-h-screen flex flex-col items-center py-12 px-4 bg-gray-100">
   <div class="max-w-3xl w-full text-center space-y-2 mb-10">
-    <h1 class="text-4xl font-bold tracking-tight text-gray-900">Convert Rich Text to Markdown</h1>
+    <p class="text-4xl font-bold tracking-tight text-gray-900">Convert Rich Text to Markdown</p>
     <p class="text-lg text-gray-600">Quickly convert your rich formatted text to Markdown</p>
   </div>
-  
+
   <!-- Alert UI -->
   <app-alert-container></app-alert-container>
 
-  <div class="mt-6 w-full flex justify-center max-w-3xl"> 
+  <div class="mt-6 w-full flex justify-center max-w-3xl">
     <div class="editor-container">
       <!-- RichText Editor Component -->
       <div class="editor-wrapper">
         <app-richtext #editor></app-richtext>
       </div>
-    
+
       <!-- Sticky Vertical Button Group -->
       <div class="sticky-buttons">
         <div class="tooltip-container">
-          <button 
-            class="custom-button"
-            aria-label="Copy to clipboard"
-            (click)="copyMarkdown()">
+          <button class="custom-button" aria-label="Copy to clipboard" (click)="copyMarkdown()">
             <lucide-angular [img]="ClipboardCopy"></lucide-angular>
           </button>
           <span class="tooltip-text">Copy Markdown</span>
         </div>
-    
+
         <div class="tooltip-container">
-          <button 
-            class="custom-button"
-            aria-label="Download"
-            (click)="downloadMarkdown()">
+          <button class="custom-button" aria-label="Download" (click)="downloadMarkdown()">
             <lucide-angular [img]="ArrowDownToLine"></lucide-angular>
           </button>
           <span class="tooltip-text">Download as .md File</span>
         </div>
-    
+
         <div class="tooltip-container">
-          <button 
-            class="custom-button"
-            aria-label="Help"
-            (click)="clearContent()">
+          <button class="custom-button" aria-label="Help" (click)="clearContent()">
             <lucide-angular [img]="X"></lucide-angular>
           </button>
           <span class="tooltip-text">Clear Text</span>
@@ -48,4 +39,6 @@
       </div>
     </div>
   </div>
+  <!-- help section -->
+  <app-helpsection />
 </div>

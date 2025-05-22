@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { UiComponent } from "./ui/ui.component";
+import { UiComponent } from './ui/ui.component';
 
 @Component({
   selector: 'app-root',
@@ -10,10 +10,5 @@ import { UiComponent } from "./ui/ui.component";
   styleUrl: './app.component.css',
 })
 export class AppComponent {
-
   title: string | undefined;
-
 }
-
-
-

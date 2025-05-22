@@ -1,7 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnDestroy, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule, Heading, Bold, Italic, Strikethrough, Underline, Code } from 'lucide-angular';
+import {
+  LucideAngularModule,
+  Heading,
+  Bold,
+  Italic,
+  Strikethrough,
+  Underline,
+  Code,
+} from 'lucide-angular';
 
 import { TiptapBubbleMenuDirective, TiptapEditorDirective } from 'ngx-tiptap';
 import { EditorService } from '../services/editor.service';
@@ -9,18 +17,17 @@ import { Editor } from '@tiptap/core';
 
 @Component({
   selector: 'app-richtext',
-  imports: [ 
-    CommonModule, 
-    FormsModule, 
-    TiptapBubbleMenuDirective, 
-    TiptapEditorDirective, 
-    LucideAngularModule 
+  imports: [
+    CommonModule,
+    FormsModule,
+    TiptapBubbleMenuDirective,
+    TiptapEditorDirective,
+    LucideAngularModule,
   ],
   templateUrl: './richtext.component.html',
-  styleUrl: './richtext.component.css'
+  styleUrl: './richtext.component.css',
 })
-export class RichtextComponent implements OnDestroy{
-
+export class RichtextComponent implements OnDestroy {
   readonly Heading = Heading;
   readonly Bold = Bold;
   readonly Italic = Italic;
@@ -29,15 +36,14 @@ export class RichtextComponent implements OnDestroy{
   readonly Code = Code;
 
   private editorService = inject(EditorService); //inject editorService using 'inject'
-  content: Signal<string> = this.editorService.content // Bind signal directly
+  content: Signal<string> = this.editorService.content; // Bind signal directly
 
   readonly editor = this.editorService.editor;
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.editorService.destroyEditor();
   }
 
-  
   // Safe getter for editor
   get safeEditor(): Editor {
     const editorInstance = this.editorService.editor();
@@ -46,5 +52,4 @@ export class RichtextComponent implements OnDestroy{
     }
     return editorInstance;
   }
-
 }

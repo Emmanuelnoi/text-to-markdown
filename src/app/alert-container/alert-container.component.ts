@@ -7,9 +7,8 @@ import { CommonModule } from '@angular/common';
   selector: 'app-alert-container',
   imports: [CommonModule, AlertComponent],
   templateUrl: './alert-container.component.html',
-  styleUrl: './alert-container.component.css'
+  styleUrl: './alert-container.component.css',
 })
 export class AlertContainerComponent {
-  alertService = inject(AlertService)
-
+  alertService = inject(AlertService);
 }

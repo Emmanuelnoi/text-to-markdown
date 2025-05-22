@@ -10,9 +10,8 @@ describe('AlertComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AlertComponent],
-      providers: [provideAnimations()]
-    })
-    .compileComponents();
+      providers: [provideAnimations()],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(AlertComponent);
     component = fixture.componentInstance;
@@ -27,29 +26,29 @@ describe('AlertComponent', () => {
     component.title = 'Test Title';
     component.message = 'Test Message';
     fixture.detectChanges();
-  
+
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.alert-title')?.textContent).toContain('Test Title');
     expect(compiled.querySelector('.alert-message')?.textContent).toContain('Test Message');
   });
-  
+
   it('should emit close event when close button is clicked', () => {
     spyOn(component.customClose, 'emit');
-  
+
     const button = fixture.nativeElement.querySelector('.alert-close') as HTMLButtonElement;
     button.click();
-  
+
     expect(component.customClose.emit).toHaveBeenCalled();
   });
-  
+
   it('should show the correct icon for "success"', () => {
     component.type = 'success';
     fixture.detectChanges();
-  
+
     const svg = fixture.nativeElement.querySelector('svg');
     expect(svg).toBeTruthy();
   });
-  
+
   it('should show alert with fadeInOut animation', () => {
     const alertEl = fixture.nativeElement.querySelector('.alert');
     expect(alertEl).toBeTruthy(); // ensure element exists
@@ -58,14 +57,13 @@ describe('AlertComponent', () => {
 
   it('should emit close event after timeout', fakeAsync(() => {
     spyOn(component.customClose, 'emit');
-  
+
     // Simulate ngOnInit or timeout logic
     // component.ngOnInit(); <-- only if you're triggering dismissal in lifecycle
-  
+
     setTimeout(() => component.customClose.emit(), 3000); // simulate internal logic
     tick(3000);
-  
+
     expect(component.customClose.emit).toHaveBeenCalled();
   }));
-
 });
