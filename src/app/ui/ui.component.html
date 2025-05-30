@@ -1,44 +1,65 @@
-<div class="min-h-screen flex flex-col items-center py-12 px-4 bg-gray-100">
-  <div class="max-w-3xl w-full text-center space-y-2 mb-10">
-    <p class="text-4xl font-bold tracking-tight text-gray-900">Convert Rich Text to Markdown</p>
-    <p class="text-lg text-gray-600">Quickly convert your rich formatted text to Markdown</p>
+<div
+  class="min-h-screen flex flex-col items-center py-6 sm:py-8 md:py-12 lg:py-16 px-4 sm:px-6 lg:px-8 bg-gray-100">
+  <!-- Header section with responsive spacing -->
+  <div class="max-w-3xl w-full text-center space-y-1 sm:space-y-2 mb-6 sm:mb-8 md:mb-10 lg:mb-12">
+    <p class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-900">
+      Convert Rich Text to Markdown
+    </p>
+    <p class="text-base sm:text-lg text-gray-600">
+      Quickly convert your rich formatted text to Markdown
+    </p>
   </div>
 
   <!-- Alert UI -->
   <app-alert-container></app-alert-container>
 
-  <div class="mt-6 w-full flex justify-center max-w-3xl">
-    <div class="editor-container">
-      <!-- RichText Editor Component -->
-      <div class="editor-wrapper">
-        <app-richtext #editor></app-richtext>
-      </div>
-
-      <!-- Sticky Vertical Button Group -->
-      <div class="sticky-buttons">
-        <div class="tooltip-container">
-          <button class="custom-button" aria-label="Copy to clipboard" (click)="copyMarkdown()">
-            <lucide-angular [img]="ClipboardCopy"></lucide-angular>
-          </button>
-          <span class="tooltip-text">Copy Markdown</span>
+  <!-- Main content container - responsive spacing and width -->
+  <div
+    class="w-full max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl xl:max-w-4xl space-y-4 sm:space-y-6 md:space-y-8">
+    <!-- Editor section with buttons -->
+    <div class="relative">
+      <div class="editor-container">
+        <!-- RichText Editor Component -->
+        <div class="editor-wrapper">
+          <app-richtext #editor></app-richtext>
         </div>
 
-        <div class="tooltip-container">
-          <button class="custom-button" aria-label="Download" (click)="downloadMarkdown()">
-            <lucide-angular [img]="ArrowDownToLine"></lucide-angular>
-          </button>
-          <span class="tooltip-text">Download as .md File</span>
-        </div>
+        <!-- Sticky Vertical Button Group with responsive positioning -->
+        <div class="sticky-buttons">
+          <div class="tooltip-container">
+            <button class="custom-button" aria-label="Copy to clipboard" (click)="copyMarkdown()">
+              <lucide-angular [img]="ClipboardCopy"></lucide-angular>
+            </button>
+            <span class="tooltip-text">Copy Markdown</span>
+          </div>
 
-        <div class="tooltip-container">
-          <button class="custom-button" aria-label="Help" (click)="clearContent()">
-            <lucide-angular [img]="X"></lucide-angular>
-          </button>
-          <span class="tooltip-text">Clear Text</span>
+          <div class="tooltip-container">
+            <button class="custom-button" aria-label="Download" (click)="downloadMarkdown()">
+              <lucide-angular [img]="ArrowDownToLine"></lucide-angular>
+            </button>
+            <span class="tooltip-text">Download as .md File</span>
+          </div>
+
+          <div class="tooltip-container">
+            <button class="custom-button" aria-label="Help" (click)="clearContent()">
+              <lucide-angular [img]="X"></lucide-angular>
+            </button>
+            <span class="tooltip-text">Clear Text</span>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Markdown Preview Component - responsive spacing -->
+    <div class="w-full">
+      <app-markdown-preview [markdownContent]="markdownContent" [isOpenByDefault]="false">
+      </app-markdown-preview>
+    </div>
   </div>
-  <!-- help section -->
-  <app-helpsection />
+
+  <!-- Help section with responsive spacing -->
+  <div
+    class="w-full max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl xl:max-w-4xl mt-8 sm:mt-10 md:mt-12 lg:mt-16">
+    <app-helpsection />
+  </div>
 </div>

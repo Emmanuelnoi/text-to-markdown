@@ -26,6 +26,7 @@ import { ComponentStateService } from '../services/component-state.service';
 import { AlertService } from '../services/alert.service';
 import { AlertContainerComponent } from '../alert-container/alert-container.component';
 import { HelpsectionComponent } from '../helpsection/helpsection.component';
+import { MarkdownPreviewComponent } from '../markdown-preview/markdown-preview.component';
 
 @Component({
   selector: 'app-ui',
@@ -35,6 +36,7 @@ import { HelpsectionComponent } from '../helpsection/helpsection.component';
     RichtextComponent,
     AlertContainerComponent,
     HelpsectionComponent,
+    MarkdownPreviewComponent,
   ],
   templateUrl: './ui.component.html',
   styleUrl: './ui.component.css',
@@ -89,15 +91,14 @@ export class UiComponent implements OnDestroy, AfterViewInit {
     return this.markdownContent() !== '';
   }
 
-  // Show help
-  showHelp() {
-    this.componentStateService.toggleVisibility();
-    this.cd.detectChanges(); // Force change detection
-  }
-
   // Clear editor content and reset markdown content
   clearContent() {
     this.editorService.clearContent(); // Call the clearContent method from editorService
     this.markdownContent.set(''); // Reset markdown content to empty string
+  }
+
+  // In your app component, when editor content changes:
+  onEditorContentChange(newContent: string) {
+    this.editorService.updateContent(newContent);
   }
 }

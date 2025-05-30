@@ -107,6 +107,11 @@ export class EditorService {
     this.markdownContent.set(markdown);
   }
 
+  // Method to update content (call this when editor content chnages)
+  updateContent(newContent: string): void {
+    this.content.set(newContent);
+  }
+
   convertAndCopyMarkdown(): void {
     const html = this.content();
 

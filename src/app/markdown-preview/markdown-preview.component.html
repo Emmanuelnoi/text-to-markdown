@@ -1,0 +1,92 @@
+<div class="w-full">
+  <div class="rounded-lg overflow-hidden border border-gray-200 shadow-sm bg-white">
+    <button
+      (click)="togglePreview()"
+      class="flex items-center justify-between w-full p-4 text-left focus:outline-none bg-gray-50 hover:bg-gray-100 transition-colors"
+      [attr.aria-expanded]="isOpen"
+      aria-controls="markdown-preview-content">
+      <span class="font-medium text-gray-900">{{ title }}</span>
+
+      <!-- Convert button and chevron -->
+      <div class="flex items-center gap-3">
+        <button
+          (click)="onConvert($event)"
+          [disabled]="isConvertDisabled()"
+          class="px-3 py-1 text-sm bg-gray-600 text-white rounded hover:bg-red-500 hover:text-white disabled:opacity-25 disabled:cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center gap-2"
+          [ngClass]="{
+            'bg-gray-600 text-white hover:bg-gray-700': !isConvertDisabled(),
+            'bg-gray-400 text-gray-200 disabled:cursor-pointer': isConvertDisabled(),
+          }">
+          @if (isConverting) {
+            <svg
+              class="animate-spin h-3 w-3"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24">
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Converting...
+          } @else {
+            Convert
+          }
+        </button>
+
+        <span class="text-gray-500">
+          @if (isOpen) {
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="m18 15-6-6-6 6" />
+            </svg>
+          } @else {
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          }
+        </span>
+      </div>
+    </button>
+  </div>
+  <div
+    id="markdown-preview-content"
+    class="transition-all duration-300 ease-in-out overflow-hidden bg-white"
+    [style.max-height]="isOpen ? 'none' : '0'">
+    <div class="p-4">
+      <div class="flex justify-between items-center mb-3">
+        <span class="text-sm text-gray-500">Converted Markdown</span>
+      </div>
+      <div
+        class="bg-gray-50 p-4 rounded border border-gray-200 font-mono text-sm overflow-x-auto min-h-[100px]">
+        <pre class="whitespace-pre-wrap break-words">{{
+          markdownContent() || 'Your converted markdown will appear here...'
+        }}</pre>
+      </div>
+    </div>
+  </div>
+</div>
