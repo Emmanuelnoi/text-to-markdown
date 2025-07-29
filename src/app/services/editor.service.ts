@@ -72,6 +72,7 @@ export class EditorService {
     if (!instance) return;
 
     instance.commands.clearContent();
+    instance.commands.focus(); // Focus the editor after clearing
     this.content.set('');
   }
 

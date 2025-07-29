@@ -1,12 +1,12 @@
 /* Fixed width rich text editor with adjustable height */
 .ProseMirror {
   width: 100%;
-  max-width: 800px; /* Fixed maximum width - adjust as needed */
-  min-width: 400px; /* Minimum width to prevent too narrow */
-  min-height: 200px; /* Minimum height */
-  max-height: none; /* Allow unlimited height growth */
-  height: auto; /* Height adjusts to content */
-  resize: vertical; /* Only allow vertical resizing */
+  max-width: 800px;
+  min-width: 400px;
+  min-height: 200px;
+  max-height: none;
+  height: auto;
+  resize: vertical;
   overflow-y: auto; /* Show scrollbar when content exceeds viewport */
   border: 1px solid #d1d5db; /* Light mode border */
   border-radius: 8px;
@@ -17,10 +17,12 @@
   color: #111827;
   outline: none;
   transition: border-color 0.2s ease;
+  text-align: left; /* Ensure text alignment starts from left */
+  cursor: text; /* Show text cursor */
 }
 
 .ProseMirror:focus {
-  border-color: #3b82f6; /* Blue border on focus */
+  border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
@@ -34,6 +36,32 @@ html.dark .ProseMirror {
 html.dark .ProseMirror:focus {
   border-color: #60a5fa;
   box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+}
+
+/* Override placeholder positioning to align with cursor */
+.ProseMirror p.is-empty:first-child::before {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  margin: 0;
+  float: none; /* Remove float that could cause positioning issues */
+  height: auto;
+  pointer-events: none;
+  color: #9ca3af;
+  font-style: italic;
+  z-index: 1;
+}
+
+/* Dark mode placeholder text */
+html.dark .ProseMirror p.is-empty:first-child::before {
+  color: #6b7280;
+}
+
+/* Ensure the empty paragraph has proper positioning context */
+.ProseMirror p.is-empty:first-child {
+  position: relative;
+  margin: 0;
+  min-height: 1.6em; /* Match line-height for consistent spacing */
 }
 
 /* Ensure the editor container doesn't stretch beyond the fixed width */
