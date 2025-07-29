@@ -1,0 +1,45 @@
+/* Fixed width rich text editor with adjustable height */
+.ProseMirror {
+  width: 100%;
+  max-width: 800px; /* Fixed maximum width - adjust as needed */
+  min-width: 400px; /* Minimum width to prevent too narrow */
+  min-height: 200px; /* Minimum height */
+  max-height: none; /* Allow unlimited height growth */
+  height: auto; /* Height adjusts to content */
+  resize: vertical; /* Only allow vertical resizing */
+  overflow-y: auto; /* Show scrollbar when content exceeds viewport */
+  border: 1px solid #d1d5db; /* Light mode border */
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 16px;
+  line-height: 1.6;
+  background-color: #ffffff;
+  color: #111827;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.ProseMirror:focus {
+  border-color: #3b82f6; /* Blue border on focus */
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Dark mode styles */
+html.dark .ProseMirror {
+  border-color: #4b5563;
+  background-color: #1f2937;
+  color: #e5e7eb;
+}
+
+html.dark .ProseMirror:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+}
+
+/* Ensure the editor container doesn't stretch beyond the fixed width */
+:host {
+  display: block;
+  width: 100%;
+  max-width: 800px; /* Match the editor width */
+  margin: 0 auto; /* Center the editor */
+}

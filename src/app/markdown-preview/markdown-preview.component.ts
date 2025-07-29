@@ -1,5 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, Input, OnInit, signal, WritableSignal } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { EditorService } from '../services/editor.service';
 
 @Component({
@@ -8,7 +17,7 @@ import { EditorService } from '../services/editor.service';
   templateUrl: './markdown-preview.component.html',
   styleUrl: './markdown-preview.component.css',
 })
-export class MarkdownPreviewComponent implements OnInit {
+export class MarkdownPreviewComponent implements OnInit, OnDestroy {
   @Input() title = 'Markdown Preview';
   @Input() markdownContent!: WritableSignal<string>;
   @Input() isOpenByDefault = true;
@@ -23,21 +32,24 @@ export class MarkdownPreviewComponent implements OnInit {
   private readonly lastConvertedContent = signal('');
   private readonly currentEditorContent = signal('');
 
-  constructor() {
-    // Watch for changes in the editor content
-    effect(() => {
-      const editorContent = this.editorService.content();
-      this.currentEditorContent.set(editorContent);
+  // Store effect reference for cleanup
+  private readonly contentWatcherEffect = effect(() => {
+    const editorContent = this.editorService.content();
+    this.currentEditorContent.set(editorContent);
 
-      // If content changes after conversion, enable the convert button
-      if (this.hasBeenConverted() && editorContent != this.lastConvertedContent()) {
-        this.hasBeenConverted.set(false);
-      }
-    });
-  }
+    // If content changes after conversion, enable the convert button
+    if (this.hasBeenConverted() && editorContent != this.lastConvertedContent()) {
+      this.hasBeenConverted.set(false);
+    }
+  });
 
   ngOnInit(): void {
     this.isOpen = this.isOpenByDefault;
+  }
+
+  ngOnDestroy(): void {
+    // Clean up the effect to prevent memory leaks
+    this.contentWatcherEffect.destroy();
   }
 
   togglePreview() {
@@ -48,7 +60,7 @@ export class MarkdownPreviewComponent implements OnInit {
     // Disable if currently converting
     if (this.isConverting) return true;
 
-    // Disbable if no content in editor
+    // Disable if no content in editor
     const editorContent = this.currentEditorContent();
     if (!editorContent || editorContent.trim().length === 0) return true;
 
