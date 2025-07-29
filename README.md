@@ -6,11 +6,11 @@ A powerful markdown converter application with import functionality, dark mode s
 
 ### Import Modal Features
 
-https://github.com/user-attachments/assets/ImportMarkdown1.mp4
+![Import Modal Demo](public/media/ImportMarkdown1.mp4)
 
 ### Dark Mode Toggle
 
-https://github.com/user-attachments/assets/darkmode.mp4
+![Dark Mode Demo](public/media/darkmode.mp4)
 
 ## About
 
