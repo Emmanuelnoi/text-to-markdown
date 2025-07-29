@@ -1,5 +1,19 @@
 # MarkdownConverter
 
+A powerful markdown converter application with import functionality, dark mode support, and real-time preview capabilities.
+
+## Demo Videos
+
+### Import Modal Features
+
+https://github.com/user-attachments/assets/ImportMarkdown1.mp4
+
+### Dark Mode Toggle
+
+https://github.com/user-attachments/assets/darkmode.mp4
+
+## About
+
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.3.
 
 ## Development server
