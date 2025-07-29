@@ -23,4 +23,8 @@ export class AccordionComponent {
   toggleItem(id: string): void {
     this.openItem = this.openItem === id ? null : id;
   }
+
+  isDarkMode(): boolean {
+    return document.documentElement.classList.contains('dark');
+  }
 }

@@ -3,18 +3,11 @@ import { Editor } from '@tiptap/core';
 import Placeholder from '@tiptap/extension-placeholder';
 import TiptapUnderline from '@tiptap/extension-underline';
 import TiptapHeading from '@tiptap/extension-heading';
-import Code from '@tiptap/extension-code';
 import Link from '@tiptap/extension-link';
-import Blockquote from '@tiptap/extension-blockquote';
-import Document from '@tiptap/extension-document';
-import Paragraph from '@tiptap/extension-paragraph';
-import Text from '@tiptap/extension-text';
-import BulletList from '@tiptap/extension-bullet-list';
-import ListItem from '@tiptap/extension-list-item';
-import OrderedList from '@tiptap/extension-ordered-list';
 import CodeBlockLowlight from '@tiptap/extension-code-block';
 import StarterKit from '@tiptap/starter-kit';
 import TurndownService from 'turndown';
+import { marked } from 'marked';
 import { AlertService } from './alert.service';
 
 @Injectable({ providedIn: 'root' })
@@ -35,18 +28,14 @@ export class EditorService {
   private initializeEditor() {
     const tiptapEditor = new Editor({
       extensions: [
-        StarterKit,
+        StarterKit.configure({
+          // Configure StarterKit to exclude extensions we're configuring separately
+          heading: false,
+          codeBlock: false,
+        }),
         Placeholder.configure({ placeholder: 'Start writing your markdown-friendly rich text...' }),
         TiptapUnderline,
-        Code,
         Link,
-        Document,
-        Paragraph,
-        Text,
-        Blockquote,
-        BulletList,
-        OrderedList,
-        ListItem,
         CodeBlockLowlight,
         TiptapHeading.configure({ levels: [1, 2, 3, 4, 5, 6] }),
       ],
@@ -117,7 +106,7 @@ export class EditorService {
 
     if (!html.trim()) {
       this.markdownContent.set('');
-      this.alertService.info('No content to copy. Please enter some text first.', 'info');
+      this.alertService.info('No Content', 'No content to copy. Please enter some text first.');
       return;
     }
 
@@ -127,11 +116,11 @@ export class EditorService {
     navigator.clipboard
       .writeText(markdown)
       .then(() => {
-        this.alertService.success('Markdown converted and copied to clipboard! ✅', 'success');
+        this.alertService.success('Success', 'Markdown converted and copied to clipboard! ✅');
       })
       .catch(err => {
         console.error('Clipboard error:', err);
-        this.alertService.error('Failed to copy Markdown', 'error');
+        this.alertService.error('Copy Failed', 'Failed to copy Markdown');
       });
   }
 
@@ -140,7 +129,7 @@ export class EditorService {
 
     if (!html.trim()) {
       this.markdownContent.set('');
-      this.alertService.info('No content to download. Please enter some text first.', 'info');
+      this.alertService.info('No Content', 'No content to download. Please enter some text first.');
       return;
     }
 
@@ -155,7 +144,10 @@ export class EditorService {
     a.click();
     URL.revokeObjectURL(url);
 
-    this.alertService.success('Markdown converted and downloaded successfully!', 'success');
+    this.alertService.success(
+      'Download Complete',
+      'Markdown converted and downloaded successfully!',
+    );
   }
 
   // Get Markdown content
@@ -164,14 +156,82 @@ export class EditorService {
   }
 
   showSuccessAlert() {
-    this.alertService.success('Operation Successful!', 'success');
+    this.alertService.success('Success', 'Operation completed successfully!');
   }
 
   showErrorAlert() {
-    this.alertService.error('Something went wrong!', 'error');
+    this.alertService.error('Error', 'Something went wrong!');
   }
 
   showInfoAlert() {
-    this.alertService.info('No content to convert to Markdown.', 'info');
+    this.alertService.info('No Content', 'No content to convert to Markdown.');
+  }
+
+  // Import markdown functionality
+  importMarkdownFromFile(file: File): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (
+        !file.name.toLowerCase().endsWith('.md') &&
+        !file.name.toLowerCase().endsWith('.markdown')
+      ) {
+        this.alertService.error(
+          'Invalid File',
+          'Please select a valid markdown file (.md or .markdown)',
+        );
+        reject(new Error('Invalid file type'));
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const markdownText = e.target?.result as string;
+          this.importMarkdownFromText(markdownText);
+          this.alertService.success('Import Complete', `Successfully imported ${file.name}`);
+          resolve();
+        } catch (error) {
+          this.alertService.error('Import Failed', 'Failed to import markdown file');
+          reject(error);
+        }
+      };
+      reader.onerror = () => {
+        this.alertService.error('Read Error', 'Failed to read file');
+        reject(new Error('File read error'));
+      };
+      reader.readAsText(file);
+    });
+  }
+
+  importMarkdownFromText(markdownText: string): void {
+    try {
+      // Convert markdown to HTML using marked
+      const html = marked(markdownText) as string;
+
+      // Set the HTML content in the editor
+      this.setContent(html);
+
+      // Also update the markdown content signal
+      this.markdownContent.set(markdownText);
+    } catch (error) {
+      console.error('Failed to import markdown:', error);
+      this.alertService.error('Parse Error', 'Failed to parse markdown content');
+    }
+  }
+
+  // Import from URL functionality
+  async importFromUrl(url: string): Promise<void> {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const markdownText = await response.text();
+      this.importMarkdownFromText(markdownText);
+      this.alertService.success('Import Complete', 'Successfully imported from URL');
+    } catch (error) {
+      console.error('Failed to import from URL:', error);
+      this.alertService.error('Import Failed', 'Failed to import from URL');
+    }
   }
 }

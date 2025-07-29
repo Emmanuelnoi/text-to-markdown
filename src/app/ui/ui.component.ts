@@ -18,15 +18,18 @@ import {
   BadgeHelp,
   RefreshCcw,
   X,
+  Import,
 } from 'lucide-angular';
 import { RichtextComponent } from '../richtext/richtext.component';
 import { EditorService } from '../services/editor.service';
 import { CommonModule } from '@angular/common';
 import { ComponentStateService } from '../services/component-state.service';
 import { AlertService } from '../services/alert.service';
+import { ThemeService } from '../services/theme.service';
 import { AlertContainerComponent } from '../alert-container/alert-container.component';
 import { HelpsectionComponent } from '../helpsection/helpsection.component';
 import { MarkdownPreviewComponent } from '../markdown-preview/markdown-preview.component';
+import { ImportModalComponent } from '../import-modal/import-modal.component';
 
 @Component({
   selector: 'app-ui',
@@ -37,6 +40,7 @@ import { MarkdownPreviewComponent } from '../markdown-preview/markdown-preview.c
     AlertContainerComponent,
     HelpsectionComponent,
     MarkdownPreviewComponent,
+    ImportModalComponent,
   ],
   templateUrl: './ui.component.html',
   styleUrl: './ui.component.css',
@@ -48,11 +52,13 @@ export class UiComponent implements OnDestroy, AfterViewInit {
   readonly BadgeHelp = BadgeHelp;
   readonly RefreshCcw = RefreshCcw;
   readonly X = X;
+  readonly Import = Import;
 
   private editorService = inject(EditorService); // inject editorService using 'inject'
   private componentStateService = inject(ComponentStateService); // inject componentStateService using 'inject'
   private cd = inject(ChangeDetectorRef);
   private alertService = inject(AlertService);
+  private themeService = inject(ThemeService);
 
   @ViewChild('markdownPreview', { static: false }) markdownPreviewRef!: ElementRef<HTMLElement>;
 
@@ -61,6 +67,10 @@ export class UiComponent implements OnDestroy, AfterViewInit {
   content: Signal<string> = this.editorService.content; // Get editor content
   markdownContent: WritableSignal<string> = this.editorService.markdownContent; // Get markdown content
   isLoading = signal(false); // Track loading state
+  showImportModal = false; // Control import modal visibility
+
+  // Theme-related signals
+  isDarkMode = this.themeService.isDarkMode;
 
   ngOnDestroy() {
     this.editorService.destroyEditor();
@@ -93,12 +103,26 @@ export class UiComponent implements OnDestroy, AfterViewInit {
 
   // Clear editor content and reset markdown content
   clearContent() {
-    this.editorService.clearContent(); // Call the clearContent method from editorService
-    this.markdownContent.set(''); // Reset markdown content to empty string
+    this.editorService.clearContent();
+    this.markdownContent.set('');
   }
 
   // In your app component, when editor content changes:
   onEditorContentChange(newContent: string) {
     this.editorService.updateContent(newContent);
+  }
+
+  // Import modal controls
+  openImportModal(): void {
+    this.showImportModal = true;
+  }
+
+  closeImportModal(): void {
+    this.showImportModal = false;
+  }
+
+  // Dark mode toggle
+  toggleDarkMode(): void {
+    this.themeService.toggleTheme();
   }
 }

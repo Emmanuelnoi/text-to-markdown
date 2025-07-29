@@ -1,0 +1,54 @@
+/* Template button hover effects */
+.template-button {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Light mode - increased gray background */
+.template-button:hover {
+  background-color: #eceded !important; /* More gray than bg-gray-100 */
+}
+
+/* Remove default background hover in dark mode */
+:host-context(.dark) .template-button:hover {
+  background-color: transparent !important;
+}
+
+/* Dark mode - white overlay effect */
+.template-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+  pointer-events: none;
+  z-index: 1;
+  border-radius: 0;
+  opacity: 0;
+}
+
+.template-button:hover::before {
+  opacity: 1;
+}
+
+:host-context(.dark) .template-button:hover::before {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Additional fallback for dark mode */
+:host-context(.dark) .template-button::before {
+  background-color: transparent;
+}
+
+:host-context(.dark) .template-button:hover::before {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Ensure text content is above the overlay */
+.template-button > * {
+  position: relative;
+  z-index: 2;
+}

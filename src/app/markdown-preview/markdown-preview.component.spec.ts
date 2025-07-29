@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { signal } from '@angular/core';
 
 import { MarkdownPreviewComponent } from './markdown-preview.component';
 
@@ -13,6 +14,10 @@ describe('MarkdownPreviewComponent', () => {
 
     fixture = TestBed.createComponent(MarkdownPreviewComponent);
     component = fixture.componentInstance;
+
+    // Mock the required markdownContent signal input
+    component.markdownContent = signal('');
+
     fixture.detectChanges();
   });
 

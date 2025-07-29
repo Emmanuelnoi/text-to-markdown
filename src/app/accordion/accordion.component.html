@@ -1,17 +1,17 @@
 <div class="flex flex-col items-center w-full">
   <div class="w-full max-w-3xl mx-auto">
-    <h2 class="text-3xl font-bold text-center mb-2">{{ title }}</h2>
+    <h2 class="text-3xl font-bold text-center mb-2 text-gray-900 dark:text-white">{{ title }}</h2>
     <div
-      class="w-full max-w-3xl mx-auto rounded-xl overflow-hidden bg-white shadow-md border border-gray-200">
+      class="w-full max-w-3xl mx-auto rounded-xl overflow-hidden bg-gray-50 dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700">
       @for (item of items; track item.id) {
-        <div class="border-b border-gray-200 last:border-0">
+        <div class="border-b border-gray-200 dark:border-gray-700 last:border-0">
           <button
             (click)="toggleItem(item.id)"
-            class="flex items-center justify-between w-full p-4 text-left focus:outline-none bg-gray-50 hover:bg-gray-100 transition-colors"
+            class="flex items-center justify-between w-full p-4 text-left focus:outline-none bg-gray-50 dark:bg-gray-800 transition-all duration-200 relative group accordion-button"
             [attr.aria-expanded]="openItem === item.id"
             [attr.aria-controls]="'content-' + item.id">
-            <span class="font-medium text-gray-900">{{ item.title }}</span>
-            <span class="text-gray-500">
+            <span class="font-medium text-gray-900 dark:text-white">{{ item.title }}</span>
+            <span class="text-gray-500 dark:text-gray-400">
               @if (openItem === item.id) {
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -43,9 +43,10 @@
           </button>
           <div
             id="content-{{ item.id }}"
-            class="transition-all duration-300 ease-in-out overflow-hidden bg-white"
+            class="transition-all duration-300 ease-in-out overflow-hidden"
+            [style.background-color]="isDarkMode() ? '#111827' : '#e5e7eb'"
             [style.max-height.px]="openItem === item.id ? 1000 : 0">
-            <div class="p-4 text-gray-700">{{ item.content }}</div>
+            <div class="accordion-content p-4" [style.color]="isDarkMode() ? '#f9fafb' : '#374151'" [style.background-color]="isDarkMode() ? '#111827' : '#e5e7eb'">{{ item.content }}</div>
           </div>
         </div>
       }

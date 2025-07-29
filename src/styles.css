@@ -35,14 +35,50 @@
   bottom: 0;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: inherit;
+  transition: color 0.3s ease;
+}
+
 h1 {
   font-size: 1.5rem;
 }
 
+/* Dark mode for headings */
+html.dark h1,
+html.dark h2,
+html.dark h3,
+html.dark h4,
+html.dark h5,
+html.dark h6 {
+  color: #f9fafb;
+}
+
+/* Global dark mode styles */
+html,
 body {
   font-family:
     -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
     'Helvetica Neue', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9fafb;
+  color: #111827;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* Dark mode for html and body */
+html.dark,
+html.dark body {
+  background-color: #111827;
+  color: #f9fafb;
 }
 svg.my-icon {
   width: 16px;
@@ -63,8 +99,16 @@ svg.my-icon {
 }
 
 .bubble-menu button.active {
-  color: #007bff;
+  /* color: #007bff; */
+  color: red;
   background: rgba(202, 203, 204, 0.1);
+}
+
+/* Dark mode for bubble menu */
+html.dark .bubble-menu button.active {
+  /* color: #60a5fa; */
+  color: red;
+  background: rgba(75, 85, 99, 0.3);
 }
 
 .bubble-menu button lucide-angular {
@@ -78,8 +122,8 @@ pre {
   border-radius: 8px;
   overflow-x: auto;
   font-family: 'Courier New', Courier, monospace;
-  /* color: white; */
   line-height: 1.5;
+  color: #374151;
 }
 
 code {
@@ -87,4 +131,55 @@ code {
   background-color: #f5f2f0;
   padding: 2px 4px;
   border-radius: 4px;
+  color: #374151;
+}
+
+/* Dark mode for code blocks */
+html.dark pre {
+  background-color: #374151;
+  color: #e5e7eb;
+}
+
+html.dark code {
+  background-color: #4b5563;
+  color: #e5e7eb;
+}
+
+/* Dark mode for ProseMirror placeholder */
+html.dark .ProseMirror p.is-empty:first-child::before {
+  color: #9ca3af;
+}
+
+/* Universal dark mode inheritance */
+html.dark * {
+  border-color: #374151;
+}
+
+html.dark
+  *:not(svg):not(path):not(circle):not(rect):not(line):not(polyline):not(polygon):not(.alert):not(
+    .alert *
+  ):not(.alert svg):not(.alert-icon svg):not(.custom-button svg):not(.custom-button *) {
+  color: inherit;
+}
+
+/* Dark mode for all text elements */
+html.dark
+  p:not(.alert p):not(.alert-title):not(.alert-message):not(.custom-button p):not(.custom-button *),
+html.dark
+  span:not(.alert span):not(.alert-title):not(.alert-message):not(.custom-button span):not(
+    .custom-button *
+  ),
+html.dark
+  div:not(.bg-white):not(.bg-gray-50):not(.bg-blue-50):not(.alert):not(.alert-content):not(
+    .alert-title
+  ):not(.alert-message):not(.custom-button):not(.custom-button *):not(.bg-gray-200) {
+  color: #e5e7eb;
+}
+
+/* Override for specific components that handle their own dark mode */
+html.dark .bg-white,
+html.dark .bg-gray-50,
+html.dark .bg-gray-100 {
+  background-color: #1f2937 !important;
+  color: #e5e7eb !important;
 }

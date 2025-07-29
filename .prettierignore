@@ -1,3 +1,5 @@
-# Ignore artifacts:
-build
-coverage
+*.html
+dist/
+.angular/
+node_modules/
+coverage/

@@ -5,6 +5,7 @@
   border-radius: 0.5rem;
   margin-bottom: 1rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
 .alert-icon {
@@ -14,6 +15,12 @@
   height: 24px;
 }
 
+.alert-icon svg {
+  width: 100%;
+  height: 100%;
+  transition: fill 0.3s ease;
+}
+
 .alert-content {
   flex-grow: 1;
 }
@@ -21,10 +28,12 @@
 .alert-title {
   font-weight: 600;
   margin-bottom: 0.25rem;
+  transition: color 0.3s ease;
 }
 
 .alert-message {
   font-size: 0.9rem;
+  transition: color 0.3s ease;
 }
 
 .alert-close {
@@ -35,14 +44,16 @@
   line-height: 1;
   margin-left: 0.5rem;
   opacity: 0.7;
-  transition: opacity 0.2s;
+  transition:
+    opacity 0.2s,
+    color 0.3s ease;
 }
 
 .alert-close:hover {
   opacity: 1;
 }
 
-/* Alert types */
+/* Light mode alert types */
 .alert-success {
   background-color: #d4edda;
   border-left: 4px solid #28a745;
@@ -67,10 +78,151 @@
   color: #0c5460;
 }
 
+/* Dark mode alert types */
+html.dark .alert-success {
+  background-color: #16a34a !important;
+  border-left: 4px solid #48c774 !important;
+  color: #374151 !important;
+}
+
+html.dark .alert-success .alert-title {
+  color: #374151 !important;
+}
+
+html.dark .alert-success .alert-message {
+  color: #4b5563 !important;
+}
+
+html.dark .alert-success .alert-icon {
+  color: #374151 !important;
+}
+
+html.dark .alert-success .alert-svg {
+  fill: #374151 !important;
+  color: #374151 !important;
+}
+
+html.dark .alert-success .alert-icon svg {
+  fill: #374151 !important;
+}
+
+html.dark .alert-warning {
+  background-color: #ca8a04 !important;
+  border-left: 4px solid #ffdd57 !important;
+  color: #374151 !important;
+}
+
+html.dark .alert-warning .alert-title {
+  color: #374151 !important;
+}
+
+html.dark .alert-warning .alert-message {
+  color: #4b5563 !important;
+}
+
+html.dark .alert-warning .alert-icon {
+  color: #374151 !important;
+}
+
+html.dark .alert-warning .alert-svg {
+  fill: #374151 !important;
+  color: #374151 !important;
+}
+
+html.dark .alert-warning .alert-icon svg {
+  fill: #374151 !important;
+}
+
+html.dark .alert-error {
+  background-color: #dc2626 !important;
+  border-left: 4px solid #ff6b6b !important;
+  color: #374151 !important;
+}
+
+html.dark .alert-error .alert-title {
+  color: #374151 !important;
+}
+
+html.dark .alert-error .alert-message {
+  color: #4b5563 !important;
+}
+
+html.dark .alert-error .alert-icon {
+  color: #374151 !important;
+}
+
+html.dark .alert-error .alert-svg {
+  fill: #374151 !important;
+  color: #374151 !important;
+}
+
+html.dark .alert-error .alert-icon svg {
+  fill: #374151 !important;
+}
+
+html.dark .alert-info {
+  background-color: #2563eb !important;
+  border-left: 4px solid #3298dc !important;
+  color: #374151 !important;
+}
+
+html.dark .alert-info .alert-title {
+  color: #374151 !important;
+}
+
+html.dark .alert-info .alert-message {
+  color: #4b5563 !important;
+}
+
+html.dark .alert-info .alert-icon {
+  color: #374151 !important;
+}
+
+html.dark .alert-info .alert-svg {
+  fill: #374151 !important;
+  color: #374151 !important;
+}
+
+html.dark .alert-info .alert-icon svg {
+  fill: #374151 !important;
+}
+
+/* Dark mode general alert styling */
+html.dark .alert {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Fallback colors for alerts without specific type styling */
+html.dark .alert:not(.alert-success):not(.alert-warning):not(.alert-error):not(.alert-info) {
+  background-color: #2d3748;
+  color: #e2e8f0;
+}
+
+html.dark
+  .alert:not(.alert-success):not(.alert-warning):not(.alert-error):not(.alert-info)
+  .alert-title {
+  color: #f7fafc;
+}
+
+html.dark
+  .alert:not(.alert-success):not(.alert-warning):not(.alert-error):not(.alert-info)
+  .alert-message {
+  color: #cbd5e0;
+}
+
+html.dark .alert-close {
+  color: #a0aec0;
+}
+
+html.dark .alert-close:hover {
+  color: #f7fafc;
+}
+
 /* Responsive adjustments */
 @media (max-width: 576px) {
   .alert {
     flex-direction: column;
+    padding: 0.75rem;
   }
 
   .alert-icon {
@@ -82,5 +234,10 @@
     position: absolute;
     top: 0.75rem;
     right: 0.75rem;
+  }
+
+  /* Dark mode responsive adjustments */
+  html.dark .alert {
+    padding: 0.75rem;
   }
 }
