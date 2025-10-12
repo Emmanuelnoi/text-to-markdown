@@ -1,9 +1,11 @@
 import { Injectable, signal, effect, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { AnalyticsService } from './analytics.service';
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
   private platformId = inject(PLATFORM_ID);
+  private analytics = inject(AnalyticsService);
   private readonly THEME_KEY = 'markdown-converter-theme';
 
   // Signal to track dark mode state
@@ -51,6 +53,7 @@ export class ThemeService {
 
   toggleTheme(): void {
     this.isDarkMode.set(!this.isDarkMode());
+    this.analytics.trackEvent('Theme Changed', { theme: this.isDarkMode() ? 'dark' : 'light' });
   }
 
   setTheme(isDark: boolean): void {

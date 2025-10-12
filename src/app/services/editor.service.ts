@@ -1,14 +1,7 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { Editor } from '@tiptap/core';
-import Placeholder from '@tiptap/extension-placeholder';
-import TiptapUnderline from '@tiptap/extension-underline';
-import TiptapHeading from '@tiptap/extension-heading';
-import Link from '@tiptap/extension-link';
-import CodeBlockLowlight from '@tiptap/extension-code-block';
-import StarterKit from '@tiptap/starter-kit';
-import TurndownService from 'turndown';
-import { marked } from 'marked';
 import { AlertService } from './alert.service';
+import { AnalyticsService } from './analytics.service';
 
 @Injectable({ providedIn: 'root' })
 export class EditorService {
@@ -17,15 +10,33 @@ export class EditorService {
   readonly content: WritableSignal<string> = signal('');
   readonly markdownContent: WritableSignal<string> = signal(''); // store Markdown content
 
-  private turndownService = new TurndownService();
+  private turndownService: { turndown: (html: string) => string } | null = null;
   private alertService = inject(AlertService);
+  private analytics = inject(AnalyticsService);
 
   constructor() {
     this.initializeEditor();
   }
 
-  // Initialize the Tiptap editor
-  private initializeEditor() {
+  // Initialize the Tiptap editor with lazy-loaded extensions
+  private async initializeEditor() {
+    // Lazy load all TipTap extensions
+    const [
+      { default: StarterKit },
+      { default: Placeholder },
+      { default: TiptapUnderline },
+      { default: TiptapHeading },
+      { default: Link },
+      { default: CodeBlockLowlight },
+    ] = await Promise.all([
+      import('@tiptap/starter-kit'),
+      import('@tiptap/extension-placeholder'),
+      import('@tiptap/extension-underline'),
+      import('@tiptap/extension-heading'),
+      import('@tiptap/extension-link'),
+      import('@tiptap/extension-code-block'),
+    ]);
+
     const tiptapEditor = new Editor({
       extensions: [
         StarterKit.configure({
@@ -86,11 +97,17 @@ export class EditorService {
   }
 
   // Convert content to markdown
-  convertToMarkdown(): void {
+  async convertToMarkdown(): Promise<void> {
     const html = this.content();
     if (!html.trim()) {
       this.markdownContent.set('');
       return;
+    }
+
+    // Lazy load turndown service
+    if (!this.turndownService) {
+      const { default: TurndownService } = await import('turndown');
+      this.turndownService = new TurndownService();
     }
 
     const markdown = this.turndownService.turndown(html);
@@ -102,13 +119,19 @@ export class EditorService {
     this.content.set(newContent);
   }
 
-  convertAndCopyMarkdown(): void {
+  async convertAndCopyMarkdown(): Promise<void> {
     const html = this.content();
 
     if (!html.trim()) {
       this.markdownContent.set('');
       this.alertService.info('No Content', 'No content to copy. Please enter some text first.');
       return;
+    }
+
+    // Lazy load turndown service
+    if (!this.turndownService) {
+      const { default: TurndownService } = await import('turndown');
+      this.turndownService = new TurndownService();
     }
 
     const markdown = this.turndownService.turndown(html);
@@ -118,6 +141,7 @@ export class EditorService {
       .writeText(markdown)
       .then(() => {
         this.alertService.success('Success', 'Markdown converted and copied to clipboard! ✅');
+        this.analytics.trackEvent('Export', { format: 'markdown', method: 'copy' });
       })
       .catch(err => {
         console.error('Clipboard error:', err);
@@ -125,13 +149,19 @@ export class EditorService {
       });
   }
 
-  convertAndDownloadMarkdown(): void {
+  async convertAndDownloadMarkdown(): Promise<void> {
     const html = this.content();
 
     if (!html.trim()) {
       this.markdownContent.set('');
       this.alertService.info('No Content', 'No content to download. Please enter some text first.');
       return;
+    }
+
+    // Lazy load turndown service
+    if (!this.turndownService) {
+      const { default: TurndownService } = await import('turndown');
+      this.turndownService = new TurndownService();
     }
 
     const markdown = this.turndownService.turndown(html);
@@ -149,6 +179,7 @@ export class EditorService {
       'Download Complete',
       'Markdown converted and downloaded successfully!',
     );
+    this.analytics.trackEvent('Export', { format: 'markdown', method: 'download' });
   }
 
   // Get Markdown content
@@ -189,6 +220,10 @@ export class EditorService {
           const markdownText = e.target?.result as string;
           this.importMarkdownFromText(markdownText);
           this.alertService.success('Import Complete', `Successfully imported ${file.name}`);
+          this.analytics.trackEvent('Import', {
+            method: 'file',
+            fileType: file.type || 'text/markdown',
+          });
           resolve();
         } catch (error) {
           this.alertService.error('Import Failed', 'Failed to import markdown file');
@@ -203,8 +238,11 @@ export class EditorService {
     });
   }
 
-  importMarkdownFromText(markdownText: string): void {
+  async importMarkdownFromText(markdownText: string): Promise<void> {
     try {
+      // Lazy load marked
+      const { marked } = await import('marked');
+
       // Convert markdown to HTML using marked
       const html = marked(markdownText) as string;
 
@@ -230,6 +268,7 @@ export class EditorService {
       const markdownText = await response.text();
       this.importMarkdownFromText(markdownText);
       this.alertService.success('Import Complete', 'Successfully imported from URL');
+      this.analytics.trackEvent('Import', { method: 'url' });
     } catch (error) {
       console.error('Failed to import from URL:', error);
       this.alertService.error('Import Failed', 'Failed to import from URL');

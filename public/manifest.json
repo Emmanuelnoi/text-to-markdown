@@ -1,0 +1,17 @@
+{
+  "name": "Markdown Converter",
+  "short_name": "MD Convert",
+  "description": "Convert rich formatted text to Markdown instantly",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "favicon.ico", "sizes": "64x64 32x32 24x24 16x16", "type": "image/x-icon" },
+    { "src": "icon-192.png", "type": "image/png", "sizes": "192x192", "purpose": "any maskable" },
+    { "src": "icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "any maskable" }
+  ],
+  "categories": ["productivity", "utilities"],
+  "screenshots": [{ "src": "screenshot1.png", "type": "image/png", "sizes": "1280x720" }]
+}

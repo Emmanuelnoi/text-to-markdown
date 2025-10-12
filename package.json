@@ -1,6 +1,30 @@
 {
   "name": "markdown-converter",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "A powerful markdown converter with rich text editor, dark mode support, and seamless import/export features. Convert your formatted text to Markdown instantly.",
+  "author": "Your Name <your.email@example.com>",
+  "license": "MIT",
+  "keywords": [
+    "markdown",
+    "converter",
+    "editor",
+    "tiptap",
+    "angular",
+    "rich-text",
+    "markdown-editor",
+    "wysiwyg",
+    "dark-mode",
+    "export",
+    "import"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/markdown-converter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/markdown-converter/issues"
+  },
+  "homepage": "https://github.com/yourusername/markdown-converter#readme",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -88,7 +112,8 @@
     "tailwindcss": "^4.0.15",
     "tailwindcss-animate": "^1.0.6",
     "typescript": "~5.7.2",
-    "typescript-eslint": "8.27.0"
+    "typescript-eslint": "8.27.0",
+    "webpack-bundle-analyzer": "^4.10.2"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown",

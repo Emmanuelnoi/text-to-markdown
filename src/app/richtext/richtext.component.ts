@@ -44,12 +44,8 @@ export class RichtextComponent implements OnDestroy {
     this.editorService.destroyEditor();
   }
 
-  // Safe getter for editor
-  get safeEditor(): Editor {
-    const editorInstance = this.editorService.editor();
-    if (!editorInstance) {
-      throw new Error('Editor is not initialized');
-    }
-    return editorInstance;
+  // Safe getter for editor - returns null during async initialization
+  get safeEditor(): Editor | null {
+    return this.editorService.editor();
   }
 }

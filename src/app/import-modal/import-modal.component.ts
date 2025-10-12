@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { EditorService } from '../services/editor.service';
+import { AnalyticsService } from '../services/analytics.service';
 
 @Component({
   selector: 'app-import-modal',
@@ -14,6 +15,7 @@ export class ImportModalComponent {
   @Output() closeModal = new EventEmitter<void>();
 
   private readonly editorService = inject(EditorService);
+  private readonly analytics = inject(AnalyticsService);
 
   importUrl = '';
   isImporting = false;
@@ -175,9 +177,10 @@ Common issues and solutions.`,
     }
   }
 
-  loadTemplate(templateKey: keyof typeof this.templates): void {
+  async loadTemplate(templateKey: keyof typeof this.templates): Promise<void> {
     const template = this.templates[templateKey];
-    this.editorService.importMarkdownFromText(template);
+    await this.editorService.importMarkdownFromText(template);
+    this.analytics.trackEvent('Template Used', { template: templateKey });
     this.close();
   }
 }

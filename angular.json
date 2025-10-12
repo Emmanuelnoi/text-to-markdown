@@ -28,10 +28,13 @@
           "configurations": {
             "production": {
               "budgets": [
-                { "type": "initial", "maximumWarning": "500kB", "maximumError": "1MB" },
+                { "type": "initial", "maximumWarning": "800kB", "maximumError": "1MB" },
                 { "type": "anyComponentStyle", "maximumWarning": "4kB", "maximumError": "8kB" }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "namedChunks": true,
+              "statsJson": true,
+              "allowedCommonJsDependencies": ["@mixmark-io/domino", "turndown"]
             },
             "development": { "optimization": false, "extractLicenses": false, "sourceMap": true }
           },

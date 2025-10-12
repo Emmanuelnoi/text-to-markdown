@@ -70,7 +70,7 @@ export class MarkdownPreviewComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  onConvert(event?: Event): void {
+  async onConvert(event?: Event): Promise<void> {
     // Prevent event propagation if event is provided
     if (event) {
       event.stopPropagation();
@@ -86,9 +86,9 @@ export class MarkdownPreviewComponent implements OnInit, OnDestroy {
       // Store the current content before conversion
       const currentContent = this.currentEditorContent();
 
-      // Call the void convertToMarkdown method
+      // Call the async convertToMarkdown method
       // This will update the markdownContent signal internally
-      this.editorService.convertToMarkdown();
+      await this.editorService.convertToMarkdown();
 
       // Mark as converted and store the content that was converted
       this.hasBeenConverted.set(true);
