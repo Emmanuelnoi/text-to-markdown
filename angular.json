@@ -20,10 +20,7 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [{ "glob": "**/*", "input": "public" }],
             "styles": ["src/styles.css"],
-            "scripts": [],
-            "server": "src/main.server.ts",
-            "outputMode": "server",
-            "ssr": { "entry": "src/server.ts" }
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -34,7 +31,7 @@
               "outputHashing": "all",
               "namedChunks": true,
               "statsJson": true,
-              "allowedCommonJsDependencies": ["@mixmark-io/domino", "turndown"]
+              "allowedCommonJsDependencies": ["turndown"]
             },
             "development": { "optimization": false, "extractLicenses": false, "sourceMap": true }
           },
