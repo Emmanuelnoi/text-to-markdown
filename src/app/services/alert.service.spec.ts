@@ -1,12 +1,18 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { AlertService } from './alert.service';
+import { vi } from 'vitest';
 
 describe('AlertService', () => {
   let service: AlertService;
 
   beforeEach(() => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({});
     service = TestBed.inject(AlertService);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it('should be created', () => {
@@ -33,26 +39,26 @@ describe('AlertService', () => {
       expect(service.alerts().length).toBe(2);
     });
 
-    it('should auto-close alert after duration', fakeAsync(() => {
+    it('should auto-close alert after duration', () => {
       service.show('info', 'Test', 'Message', true, 1000);
       expect(service.alerts().length).toBe(1);
-      tick(1000);
+      vi.advanceTimersByTime(1000);
       expect(service.alerts().length).toBe(0);
-    }));
+    });
 
-    it('should not auto-close when autoClose is false', fakeAsync(() => {
+    it('should not auto-close when autoClose is false', () => {
       service.show('warning', 'Test', 'Message', false, 1000);
       expect(service.alerts().length).toBe(1);
-      tick(1000);
+      vi.advanceTimersByTime(1000);
       expect(service.alerts().length).toBe(1);
-    }));
+    });
 
-    it('should use default duration when not specified', fakeAsync(() => {
+    it('should use default duration when not specified', () => {
       service.show('success', 'Test', 'Message');
       expect(service.alerts().length).toBe(1);
-      tick(5000); // Default is 5000ms
+      vi.advanceTimersByTime(5000); // Default is 5000ms
       expect(service.alerts().length).toBe(0);
-    }));
+    });
   });
 
   describe('success', () => {
@@ -64,11 +70,11 @@ describe('AlertService', () => {
       expect(alert.message).toBe('Success Message');
     });
 
-    it('should auto-close by default', fakeAsync(() => {
+    it('should auto-close by default', () => {
       service.success('Success', 'Message', true, 1000);
-      tick(1000);
+      vi.advanceTimersByTime(1000);
       expect(service.alerts().length).toBe(0);
-    }));
+    });
   });
 
   describe('error', () => {
@@ -145,19 +151,19 @@ describe('AlertService', () => {
   });
 
   describe('multiple alerts', () => {
-    it('should handle multiple alerts with different auto-close times', fakeAsync(() => {
+    it('should handle multiple alerts with different auto-close times', () => {
       service.show('success', 'Test 1', 'Message 1', true, 1000);
       service.show('error', 'Test 2', 'Message 2', true, 2000);
       service.show('info', 'Test 3', 'Message 3', false);
 
       expect(service.alerts().length).toBe(3);
 
-      tick(1000);
+      vi.advanceTimersByTime(1000);
       expect(service.alerts().length).toBe(2);
 
-      tick(1000);
+      vi.advanceTimersByTime(1000);
       expect(service.alerts().length).toBe(1);
       expect(service.alerts()[0].type).toBe('info');
-    }));
+    });
   });
 });

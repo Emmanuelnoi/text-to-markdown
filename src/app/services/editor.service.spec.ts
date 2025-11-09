@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { EditorService } from './editor.service';
 import { AlertService } from './alert.service';
+import { vi } from 'vitest';
 
 describe('EditorService', () => {
   let service: EditorService;
@@ -134,12 +135,6 @@ describe('EditorService', () => {
   });
 
   describe('convertAndDownloadMarkdown', () => {
-    beforeEach(() => {
-      // Mock URL and createElement
-      spyOn(URL, 'createObjectURL').and.returnValue('blob:mock-url');
-      spyOn(URL, 'revokeObjectURL');
-    });
-
     it('should show info alert when no content', async () => {
       service.content.set('');
       await service.convertAndDownloadMarkdown();
@@ -199,12 +194,10 @@ describe('EditorService', () => {
 
   describe('importFromUrl', () => {
     beforeEach(() => {
-      spyOn(window, 'fetch').and.returnValue(
-        Promise.resolve({
-          ok: true,
-          text: () => Promise.resolve('# Markdown from URL'),
-        } as Response),
-      );
+      vi.spyOn(window, 'fetch').mockResolvedValue({
+        ok: true,
+        text: () => Promise.resolve('# Markdown from URL'),
+      } as Response);
     });
 
     it('should import markdown from URL', async () => {
@@ -216,9 +209,7 @@ describe('EditorService', () => {
     });
 
     it('should handle fetch errors', async () => {
-      (window.fetch as jasmine.Spy).and.returnValue(
-        Promise.resolve({ ok: false, status: 404 } as Response),
-      );
+      vi.spyOn(window, 'fetch').mockResolvedValue({ ok: false, status: 404 } as Response);
       await service.importFromUrl('https://example.com/invalid.md');
       expect(alertService.error).toHaveBeenCalledWith('Import Failed', 'Failed to import from URL');
     });

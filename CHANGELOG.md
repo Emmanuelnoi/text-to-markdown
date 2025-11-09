@@ -9,7 +9,6 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - **Global Error Handler** - Centralized error handling with user-friendly messages
-
   - Intelligent error message mapping for common error types
   - Integration with AlertService for user notifications
   - Support for network, storage, file, permission, and timeout errors
@@ -17,7 +16,6 @@ All notable changes to this project will be documented in this file.
   - Ready for error tracking service integration (Sentry)
 
 - **Analytics Integration (Plausible)** - Privacy-friendly analytics tracking
-
   - AnalyticsService with SSR support
   - Localhost detection (silent in development, active in production)
   - Event tracking for exports, imports, templates, and theme changes
@@ -30,7 +28,6 @@ All notable changes to this project will be documented in this file.
     - Theme Changed (theme: dark/light)
 
 - **GitHub Actions CI/CD Pipeline** - Automated testing and deployment
-
   - CI Workflow (`ci.yml`)
     - Runs on every push/PR to main and develop branches
     - Automated ESLint linting
@@ -57,14 +54,12 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - **Updated `src/index.html`**
-
   - Added Plausible Analytics script (disabled on localhost)
   - Added `mobile-web-app-capable` meta tag (fixes deprecation warning)
   - Disabled PWA manifest link (temporary, until icons are created)
   - Improved mobile web app meta tags
 
 - **Enhanced Services with Analytics**
-
   - `EditorService` - Tracks export and import events
   - `ImportModalComponent` - Tracks template usage
   - `ThemeService` - Tracks theme changes
@@ -77,14 +72,12 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - **Console Errors**
-
   - Fixed Plausible "Ignoring Event: localhost" spam
   - Fixed deprecated Apple `mobile-web-app-capable` warning
   - Fixed missing PWA icon 404 errors
   - Clean console in development environment
 
 - **Analytics Behavior**
-
   - Silent operation on localhost (no console logs)
   - Proper hostname detection (localhost, 127.0.0.1)
   - No tracking in development mode
@@ -126,7 +119,6 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - **Editor**
-
   - Rich text to Markdown conversion
   - Real-time preview
   - Support for headings, lists, bold, italic, code blocks
@@ -134,7 +126,6 @@ All notable changes to this project will be documented in this file.
   - Code syntax highlighting
 
 - **Import/Export**
-
   - Import from .md files
   - Import from URLs
   - Template library (README, blog, meeting notes, documentation)
@@ -142,7 +133,6 @@ All notable changes to this project will be documented in this file.
   - Copy to clipboard
 
 - **UI/UX**
-
   - Dark mode with automatic system detection
   - Responsive design
   - Alert system for user feedback

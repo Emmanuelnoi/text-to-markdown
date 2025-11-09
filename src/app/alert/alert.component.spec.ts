@@ -1,13 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { fakeAsync, tick } from '@angular/core/testing';
 import { AlertComponent } from './alert.component';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { vi } from 'vitest';
 
 describe('AlertComponent', () => {
   let component: AlertComponent;
   let fixture: ComponentFixture<AlertComponent>;
 
   beforeEach(async () => {
+    vi.useFakeTimers();
     await TestBed.configureTestingModule({
       imports: [AlertComponent],
       providers: [provideAnimations()],
@@ -16,6 +17,10 @@ describe('AlertComponent', () => {
     fixture = TestBed.createComponent(AlertComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it('should create', () => {
@@ -33,7 +38,7 @@ describe('AlertComponent', () => {
   });
 
   it('should emit close event when close button is clicked', () => {
-    spyOn(component.customClose, 'emit');
+    vi.spyOn(component.customClose, 'emit');
 
     const button = fixture.nativeElement.querySelector('.alert-close') as HTMLButtonElement;
     button.click();
@@ -52,18 +57,18 @@ describe('AlertComponent', () => {
   it('should show alert with fadeInOut animation', () => {
     const alertEl = fixture.nativeElement.querySelector('.alert');
     expect(alertEl).toBeTruthy(); // ensure element exists
-    expect(alertEl.hasAttribute('@fadeInOut')).toBeFalse(); // Angular animations don't render as attrs
+    expect(alertEl.hasAttribute('@fadeInOut')).toBe(false); // Angular animations don't render as attrs
   });
 
-  it('should emit close event after timeout', fakeAsync(() => {
-    spyOn(component.customClose, 'emit');
+  it('should emit close event after timeout', () => {
+    vi.spyOn(component.customClose, 'emit');
 
     // Simulate ngOnInit or timeout logic
     // component.ngOnInit(); <-- only if you're triggering dismissal in lifecycle
 
     setTimeout(() => component.customClose.emit(), 3000); // simulate internal logic
-    tick(3000);
+    vi.advanceTimersByTime(3000);
 
     expect(component.customClose.emit).toHaveBeenCalled();
-  }));
+  });
 });

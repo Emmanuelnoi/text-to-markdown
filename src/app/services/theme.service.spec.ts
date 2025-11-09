@@ -1,29 +1,32 @@
 import { TestBed } from '@angular/core/testing';
 import { PLATFORM_ID } from '@angular/core';
 import { ThemeService } from './theme.service';
+import { vi } from 'vitest';
 
 describe('ThemeService', () => {
   let service: ThemeService;
 
   beforeEach(() => {
     // Mock localStorage
-    spyOn(Storage.prototype, 'getItem').and.returnValue(null);
-    spyOn(Storage.prototype, 'setItem');
+    vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(null);
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      // no-op
+    });
 
     // Mock matchMedia
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
-      value: jasmine
-        .createSpy('matchMedia')
-        .and.returnValue({
+      value: vi
+        .fn()
+        .mockReturnValue({
           matches: false,
           media: '',
           onchange: null,
-          addListener: jasmine.createSpy(),
-          removeListener: jasmine.createSpy(),
-          addEventListener: jasmine.createSpy(),
-          removeEventListener: jasmine.createSpy(),
-          dispatchEvent: jasmine.createSpy(),
+          addListener: vi.fn(),
+          removeListener: vi.fn(),
+          addEventListener: vi.fn(),
+          removeEventListener: vi.fn(),
+          dispatchEvent: vi.fn(),
         }),
     });
 

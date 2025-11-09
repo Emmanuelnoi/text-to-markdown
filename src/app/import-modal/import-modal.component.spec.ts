@@ -2,27 +2,31 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { ImportModalComponent } from './import-modal.component';
 import { EditorService } from '../services/editor.service';
+import { vi } from 'vitest';
 
 describe('ImportModalComponent', () => {
   let component: ImportModalComponent;
   let fixture: ComponentFixture<ImportModalComponent>;
-  let editorService: jasmine.SpyObj<EditorService>;
+  let editorService: {
+    importMarkdownFromFile: ReturnType<typeof vi.fn>;
+    importFromUrl: ReturnType<typeof vi.fn>;
+    importMarkdownFromText: ReturnType<typeof vi.fn>;
+  };
 
   beforeEach(async () => {
-    const editorServiceSpy = jasmine.createSpyObj('EditorService', [
-      'importMarkdownFromFile',
-      'importFromUrl',
-      'importMarkdownFromText',
-    ]);
+    editorService = {
+      importMarkdownFromFile: vi.fn(),
+      importFromUrl: vi.fn(),
+      importMarkdownFromText: vi.fn(),
+    };
 
     await TestBed.configureTestingModule({
       imports: [FormsModule, ImportModalComponent],
-      providers: [{ provide: EditorService, useValue: editorServiceSpy }],
+      providers: [{ provide: EditorService, useValue: editorService }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ImportModalComponent);
     component = fixture.componentInstance;
-    editorService = TestBed.inject(EditorService) as jasmine.SpyObj<EditorService>;
     fixture.detectChanges();
   });
 
@@ -48,7 +52,7 @@ describe('ImportModalComponent', () => {
 
   describe('close', () => {
     it('should emit closeModal event', () => {
-      spyOn(component.closeModal, 'emit');
+      vi.spyOn(component.closeModal, 'emit');
       component.close();
       expect(component.closeModal.emit).toHaveBeenCalled();
     });
@@ -57,7 +61,7 @@ describe('ImportModalComponent', () => {
   describe('drag and drop', () => {
     it('should set isDragOver to true on dragOver', () => {
       const event = new DragEvent('dragover');
-      spyOn(event, 'preventDefault');
+      vi.spyOn(event, 'preventDefault');
       component.onDragOver(event);
       expect(event.preventDefault).toHaveBeenCalled();
       expect(component.isDragOver).toBe(true);
@@ -65,7 +69,7 @@ describe('ImportModalComponent', () => {
 
     it('should set isDragOver to false on dragLeave', () => {
       const event = new DragEvent('dragleave');
-      spyOn(event, 'preventDefault');
+      vi.spyOn(event, 'preventDefault');
       component.isDragOver = true;
       component.onDragLeave(event);
       expect(event.preventDefault).toHaveBeenCalled();
@@ -75,10 +79,11 @@ describe('ImportModalComponent', () => {
     it('should handle file drop', () => {
       const file = new File(['# Test'], 'test.md', { type: 'text/markdown' });
       const dataTransfer = new DataTransfer();
-      dataTransfer.items.add(file);
+      const fileList = [file] as unknown as FileList;
+      Object.defineProperty(dataTransfer, 'files', { value: fileList, writable: false });
       const event = new DragEvent('drop', { dataTransfer });
-      spyOn(event, 'preventDefault');
-      editorService.importMarkdownFromFile.and.returnValue(Promise.resolve());
+      vi.spyOn(event, 'preventDefault');
+      editorService.importMarkdownFromFile.mockResolvedValue(undefined);
 
       component.onDrop(event);
       expect(event.preventDefault).toHaveBeenCalled();
@@ -87,7 +92,7 @@ describe('ImportModalComponent', () => {
 
     it('should ignore drop without files', () => {
       const event = new DragEvent('drop');
-      spyOn(event, 'preventDefault');
+      vi.spyOn(event, 'preventDefault');
       component.onDrop(event);
       expect(event.preventDefault).toHaveBeenCalled();
       expect(editorService.importMarkdownFromFile).not.toHaveBeenCalled();
@@ -97,12 +102,10 @@ describe('ImportModalComponent', () => {
   describe('file selection', () => {
     it('should handle file selection from input', () => {
       const file = new File(['# Test'], 'test.md', { type: 'text/markdown' });
-      const dataTransfer = new DataTransfer();
-      dataTransfer.items.add(file);
+      const fileList = [file] as unknown as FileList;
+      const event = { target: { files: fileList } } as unknown as Event;
 
-      const event = { target: { files: dataTransfer.files } } as unknown as Event;
-
-      editorService.importMarkdownFromFile.and.returnValue(Promise.resolve());
+      editorService.importMarkdownFromFile.mockResolvedValue(undefined);
       component.onFileSelected(event);
       expect(editorService.importMarkdownFromFile).toHaveBeenCalledWith(file);
     });
@@ -118,8 +121,8 @@ describe('ImportModalComponent', () => {
   describe('importFromUrl', () => {
     it('should import markdown from URL', async () => {
       component.importUrl = 'https://example.com/test.md';
-      editorService.importFromUrl.and.returnValue(Promise.resolve());
-      spyOn(component, 'close');
+      editorService.importFromUrl.mockResolvedValue(undefined);
+      vi.spyOn(component, 'close');
 
       await component.importFromUrl();
 
@@ -136,7 +139,7 @@ describe('ImportModalComponent', () => {
 
     it('should handle import errors', async () => {
       component.importUrl = 'https://example.com/test.md';
-      editorService.importFromUrl.and.returnValue(Promise.reject('error'));
+      editorService.importFromUrl.mockRejectedValue('error');
 
       await component.importFromUrl();
       expect(component.isImporting).toBe(false);
@@ -148,7 +151,7 @@ describe('ImportModalComponent', () => {
       const promise = new Promise<void>(resolve => {
         resolveFn = resolve;
       });
-      editorService.importFromUrl.and.returnValue(promise);
+      editorService.importFromUrl.mockReturnValue(promise);
 
       const importPromise = component.importFromUrl();
       expect(component.isImporting).toBe(true);
@@ -161,49 +164,49 @@ describe('ImportModalComponent', () => {
 
   describe('loadTemplate', () => {
     it('should load readme template', async () => {
-      editorService.importMarkdownFromText.and.returnValue(Promise.resolve());
-      spyOn(component, 'close');
+      editorService.importMarkdownFromText.mockResolvedValue(undefined);
+      vi.spyOn(component, 'close');
 
       await component.loadTemplate('readme');
 
       expect(editorService.importMarkdownFromText).toHaveBeenCalledWith(
-        jasmine.stringContaining('# Project Name'),
+        expect.stringContaining('# Project Name'),
       );
       expect(component.close).toHaveBeenCalled();
     });
 
     it('should load blog template', async () => {
-      editorService.importMarkdownFromText.and.returnValue(Promise.resolve());
-      spyOn(component, 'close');
+      editorService.importMarkdownFromText.mockResolvedValue(undefined);
+      vi.spyOn(component, 'close');
 
       await component.loadTemplate('blog');
 
       expect(editorService.importMarkdownFromText).toHaveBeenCalledWith(
-        jasmine.stringContaining('# Blog Post Title'),
+        expect.stringContaining('# Blog Post Title'),
       );
       expect(component.close).toHaveBeenCalled();
     });
 
     it('should load meeting template', async () => {
-      editorService.importMarkdownFromText.and.returnValue(Promise.resolve());
-      spyOn(component, 'close');
+      editorService.importMarkdownFromText.mockResolvedValue(undefined);
+      vi.spyOn(component, 'close');
 
       await component.loadTemplate('meeting');
 
       expect(editorService.importMarkdownFromText).toHaveBeenCalledWith(
-        jasmine.stringContaining('# Meeting Notes'),
+        expect.stringContaining('# Meeting Notes'),
       );
       expect(component.close).toHaveBeenCalled();
     });
 
     it('should load docs template', async () => {
-      editorService.importMarkdownFromText.and.returnValue(Promise.resolve());
-      spyOn(component, 'close');
+      editorService.importMarkdownFromText.mockResolvedValue(undefined);
+      vi.spyOn(component, 'close');
 
       await component.loadTemplate('docs');
 
       expect(editorService.importMarkdownFromText).toHaveBeenCalledWith(
-        jasmine.stringContaining('# Documentation Title'),
+        expect.stringContaining('# Documentation Title'),
       );
       expect(component.close).toHaveBeenCalled();
     });

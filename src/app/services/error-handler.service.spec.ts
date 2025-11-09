@@ -1,25 +1,25 @@
 import { TestBed } from '@angular/core/testing';
 import { GlobalErrorHandler } from './error-handler.service';
 import { AlertService } from './alert.service';
+import { vi } from 'vitest';
 
 describe('GlobalErrorHandler', () => {
   let errorHandler: GlobalErrorHandler;
-  let alertService: jasmine.SpyObj<AlertService>;
+  let alertService: {
+    error: ReturnType<typeof vi.fn>;
+    info: ReturnType<typeof vi.fn>;
+    success: ReturnType<typeof vi.fn>;
+    warning: ReturnType<typeof vi.fn>;
+  };
 
   beforeEach(() => {
-    const alertServiceSpy = jasmine.createSpyObj('AlertService', [
-      'error',
-      'info',
-      'success',
-      'warning',
-    ]);
+    alertService = { error: vi.fn(), info: vi.fn(), success: vi.fn(), warning: vi.fn() };
 
     TestBed.configureTestingModule({
-      providers: [GlobalErrorHandler, { provide: AlertService, useValue: alertServiceSpy }],
+      providers: [GlobalErrorHandler, { provide: AlertService, useValue: alertService }],
     });
 
     errorHandler = TestBed.inject(GlobalErrorHandler);
-    alertService = TestBed.inject(AlertService) as jasmine.SpyObj<AlertService>;
   });
 
   it('should be created', () => {
@@ -28,7 +28,7 @@ describe('GlobalErrorHandler', () => {
 
   describe('handleError', () => {
     it('should log error to console', () => {
-      const consoleSpy = spyOn(console, 'error');
+      const consoleSpy = vi.spyOn(console, 'error');
       const error = new Error('Test error');
 
       errorHandler.handleError(error);
@@ -43,7 +43,7 @@ describe('GlobalErrorHandler', () => {
 
       expect(alertService.error).toHaveBeenCalledWith(
         'Error Occurred',
-        jasmine.any(String),
+        expect.any(String),
         true,
         5000,
       );

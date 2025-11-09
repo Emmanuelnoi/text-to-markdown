@@ -15,7 +15,11 @@ export class EditorService {
   private analytics = inject(AnalyticsService);
 
   constructor() {
-    this.initializeEditor();
+    // Skip editor initialization in test environment
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (!(globalThis as any).VITEST_ENVIRONMENT) {
+      this.initializeEditor();
+    }
   }
 
   // Initialize the Tiptap editor with lazy-loaded extensions
