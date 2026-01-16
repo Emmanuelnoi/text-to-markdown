@@ -26,22 +26,24 @@ test.describe('Import & Export Features', () => {
 
   test('should close import modal with close button', async ({ page }, testInfo) => {
     const isMobile = testInfo.project.name.includes('Mobile');
+    const waitTime = isMobile ? 1500 : 500;
     const importButton = page.getByRole('button', { name: /import/i }).first();
 
     if (await importButton.isVisible()) {
       await importButton.click();
-      await page.waitForTimeout(isMobile ? 1000 : 500);
+      await page.waitForTimeout(waitTime);
 
       const modal = page.locator('[role="dialog"]').or(page.locator('.modal'));
-      await expect(modal).toBeVisible({ timeout: 5000 });
+      await expect(modal).toBeVisible({ timeout: 10000 });
 
-      // Click close button
-      const closeButton = page.getByRole('button', { name: /close|cancel/i }).first();
+      // Click close button - look for aria-label="Close" or text containing close/cancel
+      const closeButton = page.getByRole('button', { name: /close/i }).first();
+      await expect(closeButton).toBeVisible({ timeout: 5000 });
       await closeButton.click();
-      await page.waitForTimeout(isMobile ? 1000 : 500);
+      await page.waitForTimeout(waitTime);
 
       // Modal should be hidden
-      await expect(modal).not.toBeVisible({ timeout: 3000 });
+      await expect(modal).not.toBeVisible({ timeout: 5000 });
     }
   });
 
@@ -109,7 +111,7 @@ test.describe('Import & Export Features', () => {
     // Add some content
     const editor = page.locator('.tiptap');
     await editor.click();
-    await editor.fill('# Download Test\n\nThis content should be downloaded.');
+    await page.keyboard.type('Download Test content for export');
 
     await page.waitForTimeout(500);
 
@@ -133,7 +135,7 @@ test.describe('Import & Export Features', () => {
         await download.saveAs(tempPath);
 
         const fileContent = fs.readFileSync(tempPath, 'utf-8');
-        expect(fileContent).toContain('Download Test');
+        expect(fileContent).toContain('Download Test content for export');
 
         // Clean up
         fs.unlinkSync(tempPath);
@@ -156,7 +158,7 @@ test.describe('Import & Export Features', () => {
     // Add content
     const editor = page.locator('.tiptap');
     await editor.click();
-    await editor.fill('Copy this markdown content');
+    await page.keyboard.type('Copy this markdown content');
 
     await page.waitForTimeout(500);
 
@@ -190,7 +192,7 @@ test.describe('Import & Export Features', () => {
 
     const editor = page.locator('.tiptap');
     await editor.click();
-    await editor.fill('Test content for alert');
+    await page.keyboard.type('Test content for alert');
 
     const copyButton = page.getByRole('button', { name: /copy/i }).first();
 

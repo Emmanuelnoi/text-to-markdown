@@ -1,4 +1,4 @@
-<div class="w-full">
+<div class="w-full" data-testid="markdown-preview-container">
   <div class="rounded-lg overflow-hidden border border-gray-200 shadow-sm bg-white">
     <button
       (click)="togglePreview()"
@@ -82,7 +82,8 @@
         <span class="text-sm text-gray-500">Converted Markdown</span>
       </div>
       <div
-        class="bg-gray-50 p-4 rounded border border-gray-200 font-mono text-sm overflow-x-auto min-h-[100px]">
+        class="bg-gray-50 p-4 rounded border border-gray-200 font-mono text-sm overflow-x-auto min-h-[100px]"
+        data-testid="markdown-preview">
         <pre class="whitespace-pre-wrap break-words">{{
           markdownContent() || 'Your converted markdown will appear here...'
         }}</pre>

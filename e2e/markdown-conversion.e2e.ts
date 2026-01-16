@@ -16,20 +16,31 @@ test.describe('Markdown Conversion', () => {
 
   test('should convert rich text to markdown', async ({ page, browserName }, testInfo) => {
     const isMobile = testInfo.project.name.includes('Mobile');
+    const waitTime = browserName === 'webkit' || isMobile ? 1500 : 500;
 
-    // Type some text in the rich text editor
+    // Type some text in the rich text editor (use keyboard.type for contenteditable)
     const editor = page.locator('.tiptap');
     await editor.click();
     await page.waitForTimeout(isMobile ? 500 : 300);
-    await editor.fill('This is a test paragraph.');
 
-    // Wait for conversion (WebKit and Mobile need more time)
-    await page.waitForTimeout(browserName === 'webkit' || isMobile ? 1500 : 500);
+    // Use keyboard.type instead of fill() for contenteditable elements
+    await page.keyboard.type('This is a test paragraph.');
 
-    // Check that markdown preview is updated
-    const preview = page
-      .locator('[data-testid="markdown-preview"]')
-      .or(page.locator('.markdown-preview'));
+    // Wait for content to be entered
+    await page.waitForTimeout(waitTime);
+
+    // Click the Convert button to trigger conversion and open preview
+    // Use exact match to avoid matching "Markdown Preview Convert" accordion toggle
+    const convertButton = page.getByRole('button', { name: 'Convert', exact: true });
+    await expect(convertButton).toBeVisible({ timeout: 5000 });
+    await convertButton.click();
+
+    // Wait for conversion to complete and preview to open
+    await page.waitForTimeout(waitTime);
+
+    // Check that markdown preview is updated - the preview should now be visible
+    const preview = page.locator('[data-testid="markdown-preview"]');
+    await expect(preview).toBeVisible({ timeout: 10000 });
 
     // The text should be converted to markdown
     const content = await preview.textContent();
@@ -142,7 +153,7 @@ test.describe('Markdown Conversion', () => {
   test('should clear content when clear button is clicked', async ({ page }) => {
     const editor = page.locator('.tiptap');
     await editor.click();
-    await editor.fill('Content to clear');
+    await page.keyboard.type('Content to clear');
 
     // Find and click clear button
     const clearButton = page
