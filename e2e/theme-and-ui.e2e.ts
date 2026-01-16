@@ -208,7 +208,14 @@ test.describe('Theme & UI Interactions', () => {
     await expect(italic).toBeVisible();
   });
 
-  test('should show appropriate cursor states', async ({ page, browserName }) => {
+  test('should show appropriate cursor states', async ({ page, browserName }, testInfo) => {
+    // Skip cursor tests on mobile devices (no mouse cursor on touch devices)
+    const projectName = testInfo?.project?.name || '';
+    if (projectName.includes('Mobile') || projectName.includes('mobile')) {
+      test.skip();
+      return;
+    }
+
     // Check buttons have pointer cursor
     const buttons = page.locator('button').first();
 

@@ -78,113 +78,94 @@
   color: #0c5460;
 }
 
-/* Dark mode alert types */
+/* Dark mode alert types - WCAG AA compliant contrast ratios */
+
+/* Success: Dark green background with white text (contrast 7.5:1) */
 html.dark .alert-success {
-  background-color: #16a34a !important;
-  border-left: 4px solid #48c774 !important;
-  color: #374151 !important;
+  background-color: #166534 !important; /* Darker green for better contrast */
+  border-left: 4px solid #4ade80 !important;
+  color: #ffffff !important;
 }
 
 html.dark .alert-success .alert-title {
-  color: #374151 !important;
+  color: #ffffff !important;
 }
 
 html.dark .alert-success .alert-message {
-  color: #4b5563 !important;
+  color: #dcfce7 !important; /* Light green tint */
 }
 
-html.dark .alert-success .alert-icon {
-  color: #374151 !important;
-}
-
-html.dark .alert-success .alert-svg {
-  fill: #374151 !important;
-  color: #374151 !important;
-}
-
+html.dark .alert-success .alert-icon,
+html.dark .alert-success .alert-svg,
 html.dark .alert-success .alert-icon svg {
-  fill: #374151 !important;
+  fill: #ffffff !important;
+  color: #ffffff !important;
 }
 
+/* Warning: Dark amber background with white text (contrast 7.2:1) */
 html.dark .alert-warning {
-  background-color: #ca8a04 !important;
-  border-left: 4px solid #ffdd57 !important;
-  color: #374151 !important;
+  background-color: #92400e !important; /* Dark amber for better contrast */
+  border-left: 4px solid #fbbf24 !important;
+  color: #ffffff !important;
 }
 
 html.dark .alert-warning .alert-title {
-  color: #374151 !important;
+  color: #ffffff !important;
 }
 
 html.dark .alert-warning .alert-message {
-  color: #4b5563 !important;
+  color: #fef3c7 !important; /* Light amber tint */
 }
 
-html.dark .alert-warning .alert-icon {
-  color: #374151 !important;
-}
-
-html.dark .alert-warning .alert-svg {
-  fill: #374151 !important;
-  color: #374151 !important;
-}
-
+html.dark .alert-warning .alert-icon,
+html.dark .alert-warning .alert-svg,
 html.dark .alert-warning .alert-icon svg {
-  fill: #374151 !important;
+  fill: #ffffff !important;
+  color: #ffffff !important;
 }
 
+/* Error: Dark red background with white text (contrast 8.5:1) */
 html.dark .alert-error {
-  background-color: #dc2626 !important;
-  border-left: 4px solid #ff6b6b !important;
-  color: #374151 !important;
+  background-color: #991b1b !important; /* Dark red for better contrast */
+  border-left: 4px solid #f87171 !important;
+  color: #ffffff !important;
 }
 
 html.dark .alert-error .alert-title {
-  color: #374151 !important;
+  color: #ffffff !important;
 }
 
 html.dark .alert-error .alert-message {
-  color: #4b5563 !important;
+  color: #fee2e2 !important; /* Light red tint */
 }
 
-html.dark .alert-error .alert-icon {
-  color: #374151 !important;
-}
-
-html.dark .alert-error .alert-svg {
-  fill: #374151 !important;
-  color: #374151 !important;
-}
-
+html.dark .alert-error .alert-icon,
+html.dark .alert-error .alert-svg,
 html.dark .alert-error .alert-icon svg {
-  fill: #374151 !important;
+  fill: #ffffff !important;
+  color: #ffffff !important;
 }
 
+/* Info: Dark blue background with white text (contrast 8.9:1) */
 html.dark .alert-info {
-  background-color: #2563eb !important;
-  border-left: 4px solid #3298dc !important;
-  color: #374151 !important;
+  background-color: #1e40af !important; /* Dark blue for better contrast */
+  border-left: 4px solid #60a5fa !important;
+  color: #ffffff !important;
 }
 
 html.dark .alert-info .alert-title {
-  color: #374151 !important;
+  color: #ffffff !important;
 }
 
 html.dark .alert-info .alert-message {
-  color: #4b5563 !important;
+  color: #dbeafe !important; /* Light blue tint */
 }
 
-html.dark .alert-info .alert-icon {
-  color: #374151 !important;
-}
-
-html.dark .alert-info .alert-svg {
-  fill: #374151 !important;
-  color: #374151 !important;
-}
-
+html.dark .alert-info .alert-icon,
+html.dark .alert-info .alert-svg,
 html.dark .alert-info .alert-icon svg {
-  fill: #374151 !important;
+  fill: #ffffff !important;
+  color: #ffffff !important;
 }
 
 /* Dark mode general alert styling */

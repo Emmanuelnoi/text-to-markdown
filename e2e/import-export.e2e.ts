@@ -24,12 +24,13 @@ test.describe('Import & Export Features', () => {
     }
   });
 
-  test('should close import modal with close button', async ({ page }) => {
+  test('should close import modal with close button', async ({ page }, testInfo) => {
+    const isMobile = testInfo.project.name.includes('Mobile');
     const importButton = page.getByRole('button', { name: /import/i }).first();
 
     if (await importButton.isVisible()) {
       await importButton.click();
-      await page.waitForTimeout(500);
+      await page.waitForTimeout(isMobile ? 1000 : 500);
 
       const modal = page.locator('[role="dialog"]').or(page.locator('.modal'));
       await expect(modal).toBeVisible({ timeout: 5000 });
@@ -37,7 +38,7 @@ test.describe('Import & Export Features', () => {
       // Click close button
       const closeButton = page.getByRole('button', { name: /close|cancel/i }).first();
       await closeButton.click();
-      await page.waitForTimeout(500);
+      await page.waitForTimeout(isMobile ? 1000 : 500);
 
       // Modal should be hidden
       await expect(modal).not.toBeVisible({ timeout: 3000 });

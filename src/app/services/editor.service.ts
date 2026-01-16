@@ -2,6 +2,7 @@ import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { Editor } from '@tiptap/core';
 import { AlertService } from './alert.service';
 import { AnalyticsService } from './analytics.service';
+import { fetchWithRetry } from '../utils/retry';
 
 @Injectable({ providedIn: 'root' })
 export class EditorService {
@@ -261,21 +262,88 @@ export class EditorService {
     }
   }
 
-  // Import from URL functionality
+  // Import from URL functionality with retry logic
   async importFromUrl(url: string): Promise<void> {
+    let retryCount = 0;
+
     try {
-      const response = await fetch(url);
+      const response = await fetchWithRetry(
+        url,
+        {},
+        {
+          maxRetries: 3,
+          initialDelay: 1000,
+          onRetry: (attempt, error, nextDelay) => {
+            retryCount = attempt;
+            console.warn(`Retry attempt ${attempt} for URL import: ${error.message}`);
+            this.alertService.warning(
+              'Retrying...',
+              `Connection failed. Retrying (${attempt}/3)...`,
+              true,
+              nextDelay + 500,
+            );
+          },
+        },
+      );
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const markdownText = await response.text();
-      this.importMarkdownFromText(markdownText);
-      this.alertService.success('Import Complete', 'Successfully imported from URL');
-      this.analytics.trackEvent('Import', { method: 'url' });
+      await this.importMarkdownFromText(markdownText);
+
+      const message =
+        retryCount > 0
+          ? `Successfully imported from URL (after ${retryCount} ${retryCount === 1 ? 'retry' : 'retries'})`
+          : 'Successfully imported from URL';
+
+      this.alertService.success('Import Complete', message);
+      this.analytics.trackEvent('Import', { method: 'url', retries: retryCount });
     } catch (error) {
       console.error('Failed to import from URL:', error);
-      this.alertService.error('Import Failed', 'Failed to import from URL');
+
+      // Provide specific error messages based on error type
+      const errorMessage = this.getUrlImportErrorMessage(error);
+      this.alertService.error('Import Failed', errorMessage);
     }
+  }
+
+  /**
+   * Returns a user-friendly error message for URL import failures
+   */
+  private getUrlImportErrorMessage(error: unknown): string {
+    if (!(error instanceof Error)) {
+      return 'Failed to import from URL. Please try again.';
+    }
+
+    const message = error.message.toLowerCase();
+
+    if (message.includes('network') || message.includes('fetch') || error.name === 'TypeError') {
+      return 'Network error. Please check your internet connection and try again.';
+    }
+
+    if (message.includes('timeout')) {
+      return 'Request timed out. The server may be slow or unreachable.';
+    }
+
+    if (message.includes('404') || message.includes('not found')) {
+      return 'URL not found. Please check the URL and try again.';
+    }
+
+    if (message.includes('403') || message.includes('forbidden')) {
+      return 'Access denied. You may not have permission to access this URL.';
+    }
+
+    if (message.includes('cors')) {
+      return 'Cross-origin request blocked. The server does not allow external access.';
+    }
+
+    if (message.includes('5')) {
+      // 5xx errors
+      return 'Server error. Please try again later.';
+    }
+
+    return 'Failed to import from URL. Please check the URL and try again.';
   }
 }

@@ -99,16 +99,14 @@ svg.my-icon {
 }
 
 .bubble-menu button.active {
-  /* color: #007bff; */
-  color: red;
-  background: rgba(202, 203, 204, 0.1);
+  color: #2563eb; /* Blue-600: 4.5:1 contrast on white */
+  background: rgba(37, 99, 235, 0.1);
 }
 
 /* Dark mode for bubble menu */
 html.dark .bubble-menu button.active {
-  /* color: #60a5fa; */
-  color: red;
-  background: rgba(75, 85, 99, 0.3);
+  color: #60a5fa; /* Blue-400: 4.6:1 contrast on dark backgrounds */
+  background: rgba(96, 165, 250, 0.2);
 }
 
 .bubble-menu button lucide-angular {
@@ -150,36 +148,44 @@ html.dark .ProseMirror p.is-empty:first-child::before {
   color: #9ca3af;
 }
 
-/* Universal dark mode inheritance */
+/* Dark mode border color */
 html.dark * {
   border-color: #374151;
 }
 
-html.dark
-  *:not(svg):not(path):not(circle):not(rect):not(line):not(polyline):not(polygon):not(.alert):not(
-    .alert *
-  ):not(.alert svg):not(.alert-icon svg):not(.custom-button svg):not(.custom-button *) {
+/* Dark mode text color - use CSS custom properties for cleaner inheritance */
+html.dark {
+  --text-primary: #e5e7eb;
+  --text-secondary: #9ca3af;
+  --bg-primary: #1f2937;
+  --bg-secondary: #374151;
+}
+
+/* Apply dark mode text color to common elements */
+html.dark p,
+html.dark span,
+html.dark div,
+html.dark label,
+html.dark li {
+  color: var(--text-primary, #e5e7eb);
+}
+
+/* Preserve SVG colors - don't override stroke/fill */
+html.dark svg,
+html.dark svg * {
   color: inherit;
 }
 
-/* Dark mode for all text elements */
-html.dark
-  p:not(.alert p):not(.alert-title):not(.alert-message):not(.custom-button p):not(.custom-button *),
-html.dark
-  span:not(.alert span):not(.alert-title):not(.alert-message):not(.custom-button span):not(
-    .custom-button *
-  ),
-html.dark
-  div:not(.bg-white):not(.bg-gray-50):not(.bg-blue-50):not(.alert):not(.alert-content):not(
-    .alert-title
-  ):not(.alert-message):not(.custom-button):not(.custom-button *):not(.bg-gray-200) {
-  color: #e5e7eb;
-}
-
-/* Override for specific components that handle their own dark mode */
+/* Override background colors for light-themed utility classes */
 html.dark .bg-white,
 html.dark .bg-gray-50,
 html.dark .bg-gray-100 {
-  background-color: #1f2937 !important;
-  color: #e5e7eb !important;
+  background-color: var(--bg-primary, #1f2937) !important;
+  color: var(--text-primary, #e5e7eb) !important;
+}
+
+/* Alert components handle their own colors - exclude from dark mode overrides */
+html.dark .alert,
+html.dark .alert * {
+  color: unset;
 }

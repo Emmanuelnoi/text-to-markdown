@@ -14,15 +14,17 @@ test.describe('Markdown Conversion', () => {
     await expect(editor).toBeVisible();
   });
 
-  test('should convert rich text to markdown', async ({ page, browserName }) => {
+  test('should convert rich text to markdown', async ({ page, browserName }, testInfo) => {
+    const isMobile = testInfo.project.name.includes('Mobile');
+
     // Type some text in the rich text editor
     const editor = page.locator('.tiptap');
     await editor.click();
-    await page.waitForTimeout(300);
+    await page.waitForTimeout(isMobile ? 500 : 300);
     await editor.fill('This is a test paragraph.');
 
-    // Wait for conversion (WebKit needs more time)
-    await page.waitForTimeout(browserName === 'webkit' ? 1000 : 500);
+    // Wait for conversion (WebKit and Mobile need more time)
+    await page.waitForTimeout(browserName === 'webkit' || isMobile ? 1500 : 500);
 
     // Check that markdown preview is updated
     const preview = page
