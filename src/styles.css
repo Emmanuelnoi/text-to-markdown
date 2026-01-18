@@ -184,8 +184,80 @@ html.dark .bg-gray-100 {
   color: var(--text-primary, #e5e7eb) !important;
 }
 
-/* Alert components handle their own colors - exclude from dark mode overrides */
-html.dark .alert,
-html.dark .alert * {
-  color: unset;
+/* Dark mode alert styles - moved here to avoid Angular view         
+          +encapsulation issues */
+html.dark .alert-success {
+  background-color: #166534 !important;
+  border-left: 4px solid #4ade80 !important;
+}
+
+html.dark .alert-success .alert-title {
+  color: #ffffff !important;
+}
+
+html.dark .alert-success .alert-message {
+  color: #dcfce7 !important;
+}
+
+html.dark .alert-success .alert-icon svg {
+  fill: #ffffff !important;
+}
+
+html.dark .alert-warning {
+  background-color: #92400e !important;
+  border-left: 4px solid #fbbf24 !important;
+}
+
+html.dark .alert-warning .alert-title {
+  color: #ffffff !important;
+}
+
+html.dark .alert-warning .alert-message {
+  color: #fef3c7 !important;
+}
+
+html.dark .alert-warning .alert-icon svg {
+  fill: #ffffff !important;
+}
+
+html.dark .alert-error {
+  background-color: #991b1b !important;
+  border-left: 4px solid #f87171 !important;
+}
+
+html.dark .alert-error .alert-title {
+  color: #ffffff !important;
+}
+
+html.dark .alert-error .alert-message {
+  color: #fee2e2 !important;
+}
+
+html.dark .alert-error .alert-icon svg {
+  fill: #ffffff !important;
+}
+
+html.dark .alert-info {
+  background-color: #1e40af !important;
+  border-left: 4px solid #60a5fa !important;
+}
+
+html.dark .alert-info .alert-title {
+  color: #ffffff !important;
+}
+
+html.dark .alert-info .alert-message {
+  color: #dbeafe !important;
+}
+
+html.dark .alert-info .alert-icon svg {
+  fill: #ffffff !important;
+}
+
+html.dark .alert-close {
+  color: #e5e7eb !important;
+}
+
+html.dark .alert-close:hover {
+  color: #ffffff !important;
 }
