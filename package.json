@@ -45,7 +45,6 @@
     "@angular/platform-browser": "^19.2.15",
     "@angular/platform-browser-dynamic": "^19.2.15",
     "@angular/router": "^19.2.15",
-    "@spartan-ng/brain": "^0.0.1-alpha.437",
     "@tailwindcss/postcss": "^4.0.15",
     "@tiptap/core": "^2.11.5",
     "@tiptap/extension-bubble-menu": "^2.11.5",

@@ -16,20 +16,31 @@ test.describe('Markdown Conversion', () => {
 
   test('should convert rich text to markdown', async ({ page, browserName }, testInfo) => {
     const isMobile = testInfo.project.name.includes('Mobile');
+    const waitTime = browserName === 'webkit' || isMobile ? 1500 : 500;
 
-    // Type some text in the rich text editor
+    // Type some text in the rich text editor (use keyboard.type for contenteditable)
     const editor = page.locator('.tiptap');
     await editor.click();
     await page.waitForTimeout(isMobile ? 500 : 300);
-    await editor.fill('This is a test paragraph.');
 
-    // Wait for conversion (WebKit and Mobile need more time)
-    await page.waitForTimeout(browserName === 'webkit' || isMobile ? 1500 : 500);
+    // Use keyboard.type instead of fill() for contenteditable elements
+    await page.keyboard.type('This is a test paragraph.');
 
-    // Check that markdown preview is updated
-    const preview = page
-      .locator('[data-testid="markdown-preview"]')
-      .or(page.locator('.markdown-preview'));
+    // Wait for content to be entered
+    await page.waitForTimeout(waitTime);
+
+    // Click the Convert button to trigger conversion and open preview
+    // Use exact match to avoid matching "Markdown Preview Convert" accordion toggle
+    const convertButton = page.getByRole('button', { name: 'Convert', exact: true });
+    await expect(convertButton).toBeVisible({ timeout: 5000 });
+    await convertButton.click();
+
+    // Wait for conversion to complete and preview to open
+    await page.waitForTimeout(waitTime);
+
+    // Check that markdown preview is updated - the preview should now be visible
+    const preview = page.locator('[data-testid="markdown-preview"]');
+    await expect(preview).toBeVisible({ timeout: 10000 });
 
     // The text should be converted to markdown
     const content = await preview.textContent();
@@ -51,41 +62,61 @@ test.describe('Markdown Conversion', () => {
     await expect(heading).toBeVisible();
   });
 
-  test('should handle bold text formatting', async ({ page }) => {
+  test('should handle bold text formatting', async ({ page, browserName }, testInfo) => {
+    // Skip on mobile devices - keyboard shortcuts don't work the same way
+    const projectName = testInfo?.project?.name || '';
+    if (projectName.includes('Mobile') || projectName.includes('mobile')) {
+      test.skip();
+      return;
+    }
+
     const editor = page.locator('.tiptap');
     await editor.click();
     await page.keyboard.type('Bold text');
 
-    // Select all text
-    await page.keyboard.press('Control+A');
+    // Use Meta for WebKit, Control for others
+    const modifier = browserName === 'webkit' ? 'Meta' : 'Control';
 
-    // Apply bold formatting (Ctrl+B)
-    await page.keyboard.press('Control+B');
+    // Select all text
+    await page.keyboard.press(`${modifier}+A`);
+
+    // Apply bold formatting
+    await page.keyboard.press(`${modifier}+B`);
 
     await page.waitForTimeout(500);
 
     // Check for bold element
     const bold = editor.locator('strong, b').first();
-    await expect(bold).toBeVisible();
+    await expect(bold).toBeVisible({ timeout: 5000 });
     expect(await bold.textContent()).toContain('Bold text');
   });
 
-  test('should handle italic text formatting', async ({ page }) => {
+  test('should handle italic text formatting', async ({ page, browserName }, testInfo) => {
+    // Skip on mobile devices - keyboard shortcuts don't work the same way
+    const projectName = testInfo?.project?.name || '';
+    if (projectName.includes('Mobile') || projectName.includes('mobile')) {
+      test.skip();
+      return;
+    }
+
     const editor = page.locator('.tiptap');
     await editor.click();
     await page.keyboard.type('Italic text');
 
-    // Select all text
-    await page.keyboard.press('Control+A');
+    // Use Meta for WebKit, Control for others
+    const modifier = browserName === 'webkit' ? 'Meta' : 'Control';
 
-    // Apply italic formatting (Ctrl+I)
-    await page.keyboard.press('Control+I');
+    // Select all text
+    await page.keyboard.press(`${modifier}+A`);
+
+    // Apply italic formatting
+    await page.keyboard.press(`${modifier}+I`);
 
     await page.waitForTimeout(500);
 
     // Check for italic element
     const italic = editor.locator('em, i').first();
-    await expect(italic).toBeVisible();
+    await expect(italic).toBeVisible({ timeout: 5000 });
   });
 
   test('should create bullet lists', async ({ page }) => {
@@ -142,7 +173,7 @@ test.describe('Markdown Conversion', () => {
   test('should clear content when clear button is clicked', async ({ page }) => {
     const editor = page.locator('.tiptap');
     await editor.click();
-    await editor.fill('Content to clear');
+    await page.keyboard.type('Content to clear');
 
     // Find and click clear button
     const clearButton = page
@@ -164,23 +195,36 @@ test.describe('Markdown Conversion', () => {
     }
   });
 
-  test('should maintain formatting across multiple edits', async ({ page }) => {
+  test('should maintain formatting across multiple edits', async ({
+    page,
+    browserName,
+  }, testInfo) => {
+    // Skip on mobile devices - keyboard shortcuts don't work the same way
+    const projectName = testInfo?.project?.name || '';
+    if (projectName.includes('Mobile') || projectName.includes('mobile')) {
+      test.skip();
+      return;
+    }
+
     const editor = page.locator('.tiptap');
     await editor.click();
 
+    // Use Meta for WebKit, Control for others
+    const modifier = browserName === 'webkit' ? 'Meta' : 'Control';
+
     // Add multiple formatted elements
     await page.keyboard.type('Regular text ');
-    await page.keyboard.press('Control+B');
+    await page.keyboard.press(`${modifier}+B`);
     await page.keyboard.type('bold');
-    await page.keyboard.press('Control+B');
+    await page.keyboard.press(`${modifier}+B`);
     await page.keyboard.type(' and ');
-    await page.keyboard.press('Control+I');
+    await page.keyboard.press(`${modifier}+I`);
     await page.keyboard.type('italic');
 
     await page.waitForTimeout(500);
 
     // Check all elements exist
-    await expect(editor.locator('strong, b')).toBeVisible();
-    await expect(editor.locator('em, i')).toBeVisible();
+    await expect(editor.locator('strong, b')).toBeVisible({ timeout: 5000 });
+    await expect(editor.locator('em, i')).toBeVisible({ timeout: 5000 });
   });
 });

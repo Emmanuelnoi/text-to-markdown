@@ -55,6 +55,13 @@ export class EditorService {
         CodeBlockLowlight,
         TiptapHeading.configure({ levels: [1, 2, 3, 4, 5, 6] }),
       ],
+      editorProps: {
+        attributes: {
+          'aria-label': 'Rich text editor - Enter your content here',
+          role: 'textbox',
+          'aria-multiline': 'true',
+        },
+      },
       onUpdate: ({ editor }) => {
         this.content.set(editor.getHTML()); // Update signal when content changes
       },

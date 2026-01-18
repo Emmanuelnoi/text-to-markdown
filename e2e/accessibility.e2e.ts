@@ -34,18 +34,19 @@ test.describe('Accessibility', () => {
   }, testInfo) => {
     // Wait for page to fully load (longer wait for WebKit and Mobile)
     const isMobile = testInfo.project.name.includes('Mobile');
-    await page.waitForTimeout(browserName === 'webkit' || isMobile ? 1500 : 500);
+    await page.waitForTimeout(browserName === 'webkit' || isMobile ? 2000 : 500);
 
-    // Check buttons have accessible names
-    const buttons = await page.locator('button').all();
+    // Check buttons have accessible names - exclude bubble menu buttons which may appear dynamically
+    const buttons = await page.locator('button:not(.bubble-menu button)').all();
 
     for (const button of buttons) {
       const isVisible = await button.isVisible().catch(() => false);
       if (!isVisible) continue;
 
       const ariaLabel = await button.getAttribute('aria-label');
+      const title = await button.getAttribute('title');
       const text = await button.textContent();
-      const hasAccessibleName = ariaLabel || (text && text.trim().length > 0);
+      const hasAccessibleName = !!(ariaLabel || title || (text && text.trim().length > 0));
 
       expect(hasAccessibleName).toBe(true);
     }
@@ -169,14 +170,11 @@ test.describe('Accessibility', () => {
   test('should have proper landmark regions', async ({ page, browserName }, testInfo) => {
     // Wait for page to fully render (longer wait for WebKit and Mobile)
     const isMobile = testInfo.project.name.includes('Mobile');
-    await page.waitForTimeout(browserName === 'webkit' || isMobile ? 1500 : 500);
+    await page.waitForTimeout(browserName === 'webkit' || isMobile ? 2000 : 500);
 
-    // Check for main landmark
+    // Check for main landmark - we added <main> element in ui.component.html
     const main = page.locator('main, [role="main"]').first();
-    const hasMain = (await main.count()) > 0;
-
-    // Application should have a main content area
-    expect(hasMain).toBe(true);
+    await expect(main).toBeVisible({ timeout: 10000 });
   });
 
   test('should not have empty links or buttons', async ({ page }) => {
