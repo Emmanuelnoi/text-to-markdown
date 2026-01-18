@@ -15,7 +15,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [18, 20, 22]
+        # Node 18 dropped due to ESM compatibility issues with @analogjs/vite-plugin-angular
+        # Angular 19 requires Node 18.19+ or Node 20+
+        node-version: [20, 22]
 
     steps:
       - name: Checkout code
