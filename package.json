@@ -59,14 +59,14 @@
     "@tiptap/starter-kit": "^2.11.5",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-    "lucide-angular": "^0.486.0",
+    "lucide-angular": "^0.562.0",
     "marked": "^16.1.1",
     "ngx-tiptap": "^12.0.0",
     "prismjs": "^1.30.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "turndown": "^7.2.0",
-    "zone.js": "~0.15.0"
+    "zone.js": "~0.16.0"
   },
   "devDependencies": {
     "@analogjs/vite-plugin-angular": "^1.21.2",
