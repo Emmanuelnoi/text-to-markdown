@@ -106,7 +106,7 @@
     "tailwind-merge": "^2.2.0",
     "tailwindcss": "^4.0.15",
     "tailwindcss-animate": "^1.0.6",
-    "typescript": "~5.7.2",
+    "typescript": "~5.9.3",
     "typescript-eslint": "^8.27.0",
     "vitest": "^3.2.4",
     "webpack-bundle-analyzer": "^4.10.2"
