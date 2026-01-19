@@ -43,7 +43,7 @@
     "@angular/core": "^19.2.15",
     "@angular/forms": "^19.2.15",
     "@angular/platform-browser": "^19.2.15",
-    "@angular/platform-browser-dynamic": "^19.2.15",
+    "@angular/platform-browser-dynamic": "^21.1.0",
     "@angular/router": "^19.2.15",
     "@tailwindcss/postcss": "^4.0.15",
     "@tiptap/core": "^2.11.5",
