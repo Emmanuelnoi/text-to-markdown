@@ -22,6 +22,7 @@ module.exports = tseslint.config(
         'error',
         { type: 'element', prefix: ['app', 'hlm'], style: 'kebab-case' },
       ],
+      'no-warning-comments': ['error', { terms: ['todo', 'fixme', 'xxx'], location: 'start' }],
     },
   },
   {

@@ -35,8 +35,8 @@ export class RichtextComponent implements OnDestroy {
   readonly Underline = Underline;
   readonly Code = Code;
 
-  private editorService = inject(EditorService); //inject editorService using 'inject'
-  content: Signal<string> = this.editorService.content; // Bind signal directly
+  private editorService = inject(EditorService);
+  content: Signal<string> = this.editorService.content;
 
   readonly editor = this.editorService.editor;
 
@@ -44,7 +44,6 @@ export class RichtextComponent implements OnDestroy {
     this.editorService.destroyEditor();
   }
 
-  // Safe getter for editor - returns null during async initialization
   get safeEditor(): Editor | null {
     return this.editorService.editor();
   }

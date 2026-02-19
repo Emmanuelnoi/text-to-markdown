@@ -1,4 +1,9 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
+
+async function getShortcutModifier(page: Page): Promise<'Meta' | 'Control'> {
+  const platform = await page.evaluate(() => navigator.platform);
+  return /Mac|iPhone|iPad/i.test(platform) ? 'Meta' : 'Control';
+}
 
 test.describe('Theme & UI Interactions', () => {
   test.beforeEach(async ({ page }) => {
@@ -7,25 +12,17 @@ test.describe('Theme & UI Interactions', () => {
   });
 
   test('should toggle dark mode', async ({ page }) => {
-    // Find theme toggle button
     const themeToggle = page
       .getByRole('button', { name: /theme|dark|light/i })
       .or(page.locator('button[aria-label*="theme" i]'));
 
     if (await themeToggle.isVisible()) {
-      // Get initial theme
       const htmlElement = page.locator('html');
       const initialClass = await htmlElement.getAttribute('class');
-
-      // Toggle theme
       await themeToggle.click();
       await page.waitForTimeout(300);
-
-      // Check theme changed
       const newClass = await htmlElement.getAttribute('class');
       expect(newClass).not.toBe(initialClass);
-
-      // Theme should toggle between light and dark
       const hasDarkMode = initialClass?.includes('dark') || newClass?.includes('dark');
       expect(hasDarkMode).toBe(true);
     }
@@ -37,25 +34,19 @@ test.describe('Theme & UI Interactions', () => {
       .or(page.locator('button[aria-label*="theme" i]'));
 
     if (await themeToggle.isVisible()) {
-      // Set to dark mode
       await themeToggle.click();
       await page.waitForTimeout(300);
 
       const htmlElement = page.locator('html');
       const themeBeforeReload = await htmlElement.getAttribute('class');
-
-      // Reload page
       await page.reload();
       await page.waitForLoadState('networkidle');
-
-      // Check theme persisted
       const themeAfterReload = await htmlElement.getAttribute('class');
       expect(themeAfterReload).toBe(themeBeforeReload);
     }
   });
 
   test('should show help/guide section', async ({ page }) => {
-    // Look for help button
     const helpButton = page
       .getByRole('button', { name: /help|guide|\?/i })
       .or(page.locator('button:has-text("Help"), button:has-text("Guide")'));
@@ -64,8 +55,6 @@ test.describe('Theme & UI Interactions', () => {
     if (isVisible) {
       await helpButton.click();
       await page.waitForTimeout(500);
-
-      // Check help content is visible
       const helpSection = page.locator('[role="dialog"]').or(page.locator('.help, .guide'));
 
       await expect(helpSection).toBeVisible({ timeout: 3000 });
@@ -83,7 +72,6 @@ test.describe('Theme & UI Interactions', () => {
       const helpSection = page.locator('[role="dialog"]').or(page.locator('.help, .guide'));
 
       if (await helpSection.isVisible({ timeout: 2000 })) {
-        // Close help
         const closeButton = page.getByRole('button', { name: /close/i }).first();
         await closeButton.click();
 
@@ -93,7 +81,6 @@ test.describe('Theme & UI Interactions', () => {
   });
 
   test('should display alerts correctly', async ({ page }) => {
-    // Trigger an action that shows an alert
     const editor = page.locator('.tiptap');
     await editor.click();
     await page.keyboard.type('Test content');
@@ -102,16 +89,11 @@ test.describe('Theme & UI Interactions', () => {
 
     if (await copyButton.isVisible()) {
       await copyButton.click();
-
-      // Check alert appears
       const alert = page.locator('[role="alert"]').or(page.locator('.alert')).first();
 
       if (await alert.isVisible({ timeout: 2000 }).catch(() => false)) {
-        // Alert should have proper styling
         const alertClasses = await alert.getAttribute('class');
         expect(alertClasses).toBeTruthy();
-
-        // Alert should have title and message
         const alertText = await alert.textContent();
         expect(alertText?.length).toBeGreaterThan(0);
       }
@@ -119,7 +101,6 @@ test.describe('Theme & UI Interactions', () => {
   });
 
   test('should close alerts manually', async ({ page }) => {
-    // Trigger an alert
     const editor = page.locator('.tiptap');
     await editor.click();
     await page.keyboard.type('Content');
@@ -132,13 +113,10 @@ test.describe('Theme & UI Interactions', () => {
       const alert = page.locator('[role="alert"]').or(page.locator('.alert')).first();
 
       if (await alert.isVisible({ timeout: 2000 }).catch(() => false)) {
-        // Find close button in alert
         const closeButton = alert.locator('button').first();
 
         if (await closeButton.isVisible()) {
           await closeButton.click();
-
-          // Alert should disappear
           await expect(alert).not.toBeVisible({ timeout: 2000 });
         }
       }
@@ -146,17 +124,12 @@ test.describe('Theme & UI Interactions', () => {
   });
 
   test('should be responsive on mobile', async ({ page }) => {
-    // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
 
     await page.goto('/');
     await page.waitForLoadState('networkidle');
-
-    // Check main elements are still visible and functional
     const editor = page.locator('.tiptap');
     await expect(editor).toBeVisible();
-
-    // Editor should be usable
     await editor.click();
     await page.keyboard.type('Mobile test');
 
@@ -165,7 +138,6 @@ test.describe('Theme & UI Interactions', () => {
   });
 
   test('should be responsive on tablet', async ({ page }) => {
-    // Set tablet viewport
     await page.setViewportSize({ width: 768, height: 1024 });
 
     await page.goto('/');
@@ -173,16 +145,13 @@ test.describe('Theme & UI Interactions', () => {
 
     const editor = page.locator('.tiptap');
     await expect(editor).toBeVisible();
-
-    // All main features should be accessible
     await editor.click();
     await page.keyboard.type('Tablet test');
 
     expect(await editor.textContent()).toContain('Tablet test');
   });
 
-  test('should handle keyboard shortcuts', async ({ page, browserName }, testInfo) => {
-    // Skip on mobile devices - keyboard shortcuts don't work the same way
+  test('should handle keyboard shortcuts', async ({ page }, testInfo) => {
     const projectName = testInfo?.project?.name || '';
     if (projectName.includes('Mobile') || projectName.includes('mobile')) {
       test.skip();
@@ -191,11 +160,7 @@ test.describe('Theme & UI Interactions', () => {
 
     const editor = page.locator('.tiptap');
     await editor.click();
-
-    // Use Meta for WebKit (macOS), Control for others
-    const modifier = browserName === 'webkit' ? 'Meta' : 'Control';
-
-    // Test Bold shortcut
+    const modifier = await getShortcutModifier(page);
     await page.keyboard.type('Bold text');
     await page.keyboard.press(`${modifier}+A`);
     await page.keyboard.press(`${modifier}+B`);
@@ -204,8 +169,6 @@ test.describe('Theme & UI Interactions', () => {
 
     const bold = editor.locator('strong, b');
     await expect(bold).toBeVisible({ timeout: 5000 });
-
-    // Clear and test Italic shortcut
     await page.keyboard.press(`${modifier}+A`);
     await page.keyboard.press('Backspace');
     await page.keyboard.type('Italic text');
@@ -219,31 +182,22 @@ test.describe('Theme & UI Interactions', () => {
   });
 
   test('should show appropriate cursor states', async ({ page, browserName }, testInfo) => {
-    // Skip cursor tests on mobile devices (no mouse cursor on touch devices)
     const projectName = testInfo?.project?.name || '';
     if (projectName.includes('Mobile') || projectName.includes('mobile')) {
       test.skip();
       return;
     }
-
-    // Check buttons have pointer cursor
     const buttons = page.locator('button').first();
 
     if (await buttons.isVisible()) {
       const cursor = await buttons.evaluate(el => window.getComputedStyle(el).cursor);
-      // Different browsers have different default cursor styles for buttons
-      // Accept both 'pointer' and 'default' as valid cursor states
       expect(['pointer', 'default', 'auto']).toContain(cursor);
     }
   });
 
   test('should handle focus states correctly', async ({ page }) => {
     const editor = page.locator('.tiptap');
-
-    // Focus editor
     await editor.focus();
-
-    // Check editor has focus
     const isFocused = await editor.evaluate(
       el => document.activeElement === el || el.contains(document.activeElement),
     );
@@ -254,18 +208,12 @@ test.describe('Theme & UI Interactions', () => {
     const editor = page.locator('.tiptap');
     await editor.click();
     await page.keyboard.type('Persistent content');
-
-    // Get current content
     const initialContent = await editor.textContent();
-
-    // Interact with other UI elements
     const themeToggle = page.getByRole('button', { name: /theme/i }).first();
     if (await themeToggle.isVisible()) {
       await themeToggle.click();
       await page.waitForTimeout(300);
     }
-
-    // Content should persist
     const afterContent = await editor.textContent();
     expect(afterContent).toBe(initialContent);
   });

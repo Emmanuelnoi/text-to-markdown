@@ -8,14 +8,11 @@ export class ThemeService {
   private analytics = inject(AnalyticsService);
   private readonly THEME_KEY = 'markdown-converter-theme';
 
-  // Signal to track dark mode state
   isDarkMode = signal(false);
 
   constructor() {
-    // Initialize theme from localStorage or system preference
     this.initializeTheme();
 
-    // Effect to update DOM when theme changes
     effect(() => {
       this.updateDOM(this.isDarkMode());
     });
@@ -24,13 +21,11 @@ export class ThemeService {
   private initializeTheme(): void {
     if (!isPlatformBrowser(this.platformId)) return;
 
-    // Check localStorage first
     const storedTheme = localStorage.getItem(this.THEME_KEY);
 
     if (storedTheme) {
       this.isDarkMode.set(storedTheme === 'dark');
     } else {
-      // Check system preference
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       this.isDarkMode.set(prefersDark);
     }
@@ -47,7 +42,6 @@ export class ThemeService {
       htmlElement.classList.remove('dark');
     }
 
-    // Save preference to localStorage
     localStorage.setItem(this.THEME_KEY, isDark ? 'dark' : 'light');
   }
 

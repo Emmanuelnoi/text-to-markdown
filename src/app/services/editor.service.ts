@@ -6,26 +6,22 @@ import { fetchWithRetry } from '../utils/retry';
 
 @Injectable({ providedIn: 'root' })
 export class EditorService {
-  // Signal to track editor content
   editor = signal<Editor | null>(null);
   readonly content: WritableSignal<string> = signal('');
-  readonly markdownContent: WritableSignal<string> = signal(''); // store Markdown content
+  readonly markdownContent: WritableSignal<string> = signal('');
 
   private turndownService: { turndown: (html: string) => string } | null = null;
   private alertService = inject(AlertService);
   private analytics = inject(AnalyticsService);
 
   constructor() {
-    // Skip editor initialization in test environment
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (!(globalThis as any).VITEST_ENVIRONMENT) {
       this.initializeEditor();
     }
   }
 
-  // Initialize the Tiptap editor with lazy-loaded extensions
   private async initializeEditor() {
-    // Lazy load all TipTap extensions
     const [
       { default: StarterKit },
       { default: Placeholder },
@@ -44,11 +40,7 @@ export class EditorService {
 
     const tiptapEditor = new Editor({
       extensions: [
-        StarterKit.configure({
-          // Configure StarterKit to exclude extensions we're configuring separately
-          heading: false,
-          codeBlock: false,
-        }),
+        StarterKit.configure({ heading: false, codeBlock: false }),
         Placeholder.configure({ placeholder: 'Start writing your markdown-friendly rich text...' }),
         TiptapUnderline,
         Link,
@@ -63,19 +55,17 @@ export class EditorService {
         },
       },
       onUpdate: ({ editor }) => {
-        this.content.set(editor.getHTML()); // Update signal when content changes
+        this.content.set(editor.getHTML());
       },
     });
 
-    this.editor.set(tiptapEditor); // // Store in signal
+    this.editor.set(tiptapEditor);
   }
 
-  // Get the Tiptap editor instance
   getEditor(): Editor | null {
     return this.editor();
   }
 
-  // Update editor content
   setContent(content: string) {
     const instance = this.editor();
     if (!instance) return;
@@ -84,69 +74,46 @@ export class EditorService {
     this.content.set(content);
   }
 
-  // Get editor content
   getContent(): string {
-    return this.content(); // or use this.editor()?.getHTML()
+    return this.content();
   }
 
-  // Clear editor content
   clearContent() {
     const instance = this.editor();
     if (!instance) return;
 
     instance.commands.clearContent();
-    instance.commands.focus(); // Focus the editor after clearing
+    instance.commands.focus();
     this.content.set('');
   }
 
-  // Destroy editor when component is destroyed
   destroyEditor() {
     const instance = this.editor();
     if (!instance) return;
 
     instance.destroy();
-    this.editor.set(null); // Important to reset the signal
+    this.editor.set(null);
   }
 
-  // Convert content to markdown
   async convertToMarkdown(): Promise<void> {
-    const html = this.content();
-    if (!html.trim()) {
-      this.markdownContent.set('');
-      return;
-    }
+    const markdown = await this.convertCurrentContentToMarkdown();
+    if (markdown === null) return;
 
-    // Lazy load turndown service
-    if (!this.turndownService) {
-      const { default: TurndownService } = await import('turndown');
-      this.turndownService = new TurndownService();
-    }
-
-    const markdown = this.turndownService.turndown(html);
     this.markdownContent.set(markdown);
   }
 
-  // Method to update content (call this when editor content chnages)
   updateContent(newContent: string): void {
     this.content.set(newContent);
   }
 
   async convertAndCopyMarkdown(): Promise<void> {
-    const html = this.content();
-
-    if (!html.trim()) {
+    const markdown = await this.convertCurrentContentToMarkdown();
+    if (markdown === null) {
       this.markdownContent.set('');
       this.alertService.info('No Content', 'No content to copy. Please enter some text first.');
       return;
     }
 
-    // Lazy load turndown service
-    if (!this.turndownService) {
-      const { default: TurndownService } = await import('turndown');
-      this.turndownService = new TurndownService();
-    }
-
-    const markdown = this.turndownService.turndown(html);
     this.markdownContent.set(markdown);
 
     navigator.clipboard
@@ -162,21 +129,13 @@ export class EditorService {
   }
 
   async convertAndDownloadMarkdown(): Promise<void> {
-    const html = this.content();
-
-    if (!html.trim()) {
+    const markdown = await this.convertCurrentContentToMarkdown();
+    if (markdown === null) {
       this.markdownContent.set('');
       this.alertService.info('No Content', 'No content to download. Please enter some text first.');
       return;
     }
 
-    // Lazy load turndown service
-    if (!this.turndownService) {
-      const { default: TurndownService } = await import('turndown');
-      this.turndownService = new TurndownService();
-    }
-
-    const markdown = this.turndownService.turndown(html);
     this.markdownContent.set(markdown);
 
     const blob = new Blob([markdown], { type: 'text/markdown' });
@@ -194,7 +153,6 @@ export class EditorService {
     this.analytics.trackEvent('Export', { format: 'markdown', method: 'download' });
   }
 
-  // Get Markdown content
   getMarkdown(): string {
     return this.markdownContent();
   }
@@ -211,7 +169,6 @@ export class EditorService {
     this.alertService.info('No Content', 'No content to convert to Markdown.');
   }
 
-  // Import markdown functionality
   importMarkdownFromFile(file: File): Promise<void> {
     return new Promise((resolve, reject) => {
       if (
@@ -252,16 +209,9 @@ export class EditorService {
 
   async importMarkdownFromText(markdownText: string): Promise<void> {
     try {
-      // Lazy load marked
       const { marked } = await import('marked');
-
-      // Convert markdown to HTML using marked
       const html = marked(markdownText) as string;
-
-      // Set the HTML content in the editor
       this.setContent(html);
-
-      // Also update the markdown content signal
       this.markdownContent.set(markdownText);
     } catch (error) {
       console.error('Failed to import markdown:', error);
@@ -269,7 +219,6 @@ export class EditorService {
     }
   }
 
-  // Import from URL functionality with retry logic
   async importFromUrl(url: string): Promise<void> {
     let retryCount = 0;
 
@@ -306,19 +255,15 @@ export class EditorService {
           : 'Successfully imported from URL';
 
       this.alertService.success('Import Complete', message);
-      this.analytics.trackEvent('Import', { method: 'url', retries: retryCount });
+      this.analytics.trackEvent('Import', { method: 'url', retries: String(retryCount) });
     } catch (error) {
       console.error('Failed to import from URL:', error);
 
-      // Provide specific error messages based on error type
       const errorMessage = this.getUrlImportErrorMessage(error);
       this.alertService.error('Import Failed', errorMessage);
     }
   }
 
-  /**
-   * Returns a user-friendly error message for URL import failures
-   */
   private getUrlImportErrorMessage(error: unknown): string {
     if (!(error instanceof Error)) {
       return 'Failed to import from URL. Please try again.';
@@ -347,10 +292,28 @@ export class EditorService {
     }
 
     if (message.includes('5')) {
-      // 5xx errors
       return 'Server error. Please try again later.';
     }
 
     return 'Failed to import from URL. Please check the URL and try again.';
+  }
+
+  private async convertCurrentContentToMarkdown(): Promise<string | null> {
+    const html = this.content();
+    if (!html.trim()) {
+      return null;
+    }
+
+    const converter = await this.getTurndownService();
+    return converter.turndown(html);
+  }
+
+  private async getTurndownService(): Promise<{ turndown: (html: string) => string }> {
+    if (!this.turndownService) {
+      const { default: TurndownService } = await import('turndown');
+      this.turndownService = new TurndownService();
+    }
+
+    return this.turndownService;
   }
 }

@@ -27,17 +27,14 @@ describe('AnalyticsService', () => {
       expect(service).toBeTruthy();
     });
 
-    // Note: Tests run in localhost environment where the service intentionally
-    // doesn't track analytics. In production, these methods would call plausible.
-
     describe('trackEvent', () => {
       it('should not throw error in any circumstances', () => {
         expect(() => {
-          service.trackEvent('TestEvent');
+          service.trackEvent('Export', { format: 'markdown', method: 'copy' });
         }).not.toThrow();
 
         expect(() => {
-          service.trackEvent('TestEvent', { prop: 'value' });
+          service.trackEvent('Import', { method: 'file', fileType: 'text/markdown' });
         }).not.toThrow();
       });
     });
@@ -64,7 +61,7 @@ describe('AnalyticsService', () => {
       const mockPlausibleSpy = vi.fn();
       window.plausible = mockPlausibleSpy;
 
-      service.trackEvent('TestEvent');
+      service.trackEvent('Export', { format: 'markdown', method: 'download' });
 
       expect(mockPlausibleSpy).not.toHaveBeenCalled();
 

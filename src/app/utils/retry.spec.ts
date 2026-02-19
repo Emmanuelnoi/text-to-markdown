@@ -148,7 +148,6 @@ describe('Retry Utilities', () => {
 
       const response = await fetchWithRetry('https://example.com/api', {}, { maxRetries: 1 });
 
-      // 404 is not retryable, should return the response without retry
       expect(response.status).toBe(404);
       expect(globalThis.fetch).toHaveBeenCalledTimes(1);
     });

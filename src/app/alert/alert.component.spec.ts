@@ -56,17 +56,14 @@ describe('AlertComponent', () => {
 
   it('should show alert with fadeInOut animation', () => {
     const alertEl = fixture.nativeElement.querySelector('.alert');
-    expect(alertEl).toBeTruthy(); // ensure element exists
-    expect(alertEl.hasAttribute('@fadeInOut')).toBe(false); // Angular animations don't render as attrs
+    expect(alertEl).toBeTruthy();
+    expect(alertEl.hasAttribute('@fadeInOut')).toBe(false);
   });
 
   it('should emit close event after timeout', () => {
     vi.spyOn(component.customClose, 'emit');
 
-    // Simulate ngOnInit or timeout logic
-    // component.ngOnInit(); <-- only if you're triggering dismissal in lifecycle
-
-    setTimeout(() => component.customClose.emit(), 3000); // simulate internal logic
+    setTimeout(() => component.customClose.emit(), 3000);
     vi.advanceTimersByTime(3000);
 
     expect(component.customClose.emit).toHaveBeenCalled();

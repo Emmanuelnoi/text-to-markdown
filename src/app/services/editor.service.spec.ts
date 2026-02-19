@@ -36,7 +36,6 @@ describe('EditorService', () => {
   });
 
   it('should have null editor in test environment', () => {
-    // Editor initialization is skipped in test environment
     expect(service.editor()).toBeNull();
   });
 
@@ -76,21 +75,18 @@ describe('EditorService', () => {
 
   describe('setContent', () => {
     it('should not throw when editor is null', () => {
-      // setContent returns early if editor is null
       expect(() => service.setContent('<p>Test</p>')).not.toThrow();
     });
   });
 
   describe('clearContent', () => {
     it('should not throw when editor is null', () => {
-      // clearContent returns early if editor is null
       expect(() => service.clearContent()).not.toThrow();
     });
   });
 
   describe('destroyEditor', () => {
     it('should not throw when editor is null', () => {
-      // destroyEditor returns early if editor is null
       expect(() => service.destroyEditor()).not.toThrow();
       expect(service.editor()).toBeNull();
     });
@@ -151,7 +147,6 @@ describe('EditorService', () => {
     it('should convert and copy markdown when content exists', async () => {
       service.content.set('<p>Test</p>');
 
-      // Mock clipboard API
       const writeTextMock = vi.fn().mockResolvedValue(undefined);
       Object.assign(navigator, { clipboard: { writeText: writeTextMock } });
 
@@ -175,7 +170,6 @@ describe('EditorService', () => {
     it('should download markdown file when content exists', async () => {
       service.content.set('<p>Test</p>');
 
-      // Mock URL and document APIs
       const createObjectURLMock = vi.fn().mockReturnValue('blob:test');
       const revokeObjectURLMock = vi.fn();
       const clickMock = vi.fn();

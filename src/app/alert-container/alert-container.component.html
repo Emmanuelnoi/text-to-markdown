@@ -1,9 +1,0 @@
-<div class="alert-container">
-  @for (alert of alertService.alerts(); track alert.id) {
-    <app-alert
-      [type]="alert.type"
-      [title]="alert.title"
-      [message]="alert.message"
-      (customClose)="alertService.close(alert.id)"></app-alert>
-  }
-</div>

@@ -6,11 +6,7 @@ import {
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
 import { vi } from 'vitest';
-
-// Initialize the Angular testing environment
 getTestBed().initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
-
-// Add Jasmine compatibility for Angular tests
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace jasmine {
@@ -27,8 +23,6 @@ declare global {
     createSpyObj: (baseName: string, methodNames: string[]) => any;
   };
 }
-
-// Jasmine compatibility layer
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (globalThis as any).jasmine = {
   createSpy: () => vi.fn(),
@@ -41,16 +35,10 @@ declare global {
     return obj;
   },
 };
-
-// Global spyOn function
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (globalThis as any).spyOn = vi.spyOn;
-
-// Set test environment flag
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (globalThis as any).VITEST_ENVIRONMENT = true;
-
-// Mock window.matchMedia for tests
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: (query: string) => ({
@@ -58,22 +46,20 @@ Object.defineProperty(window, 'matchMedia', {
     media: query,
     onchange: null,
     addListener: () => {
-      /* mock */
+      return undefined;
     },
     removeListener: () => {
-      /* mock */
+      return undefined;
     },
     addEventListener: () => {
-      /* mock */
+      return undefined;
     },
     removeEventListener: () => {
-      /* mock */
+      return undefined;
     },
     dispatchEvent: () => true,
   }),
 });
-
-// Mock localStorage
 const localStorageMock = (() => {
   let store: Record<string, string> = {};
   return {
@@ -91,39 +77,29 @@ const localStorageMock = (() => {
 })();
 
 Object.defineProperty(window, 'localStorage', { value: localStorageMock });
-
-// Mock Plausible analytics
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (window as any).plausible = vi.fn();
-
-// Mock document.createElement to return proper elements for TipTap
 const originalCreateElement = document.createElement.bind(document);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 document.createElement = function (tagName: string, options?: any) {
   const element = originalCreateElement(tagName, options);
-
-  // Ensure all necessary methods exist for ProseMirror/TipTap
   if (!element.getRootNode) {
     element.getRootNode = () => document;
   }
 
   return element;
 };
-
-// Ensure document.body exists
 if (!document.body) {
   document.body = document.createElement('body');
 }
-
-// Mock Selection API for ProseMirror
 if (!window.getSelection) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (window as any).getSelection = () => ({
     removeAllRanges: () => {
-      /* mock */
+      return undefined;
     },
     addRange: () => {
-      /* mock */
+      return undefined;
     },
     getRangeAt: () => ({
       cloneRange: () => ({}),
@@ -136,8 +112,6 @@ if (!window.getSelection) {
     focusNode: null,
   });
 }
-
-// Mock DOMRect for ProseMirror
 if (!window.DOMRect) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (window as any).DOMRect = class DOMRect {
@@ -171,16 +145,14 @@ if (!window.DOMRect) {
     }
   };
 }
-
-// Mock Range for ProseMirror
 if (!document.createRange) {
   document.createRange = () =>
     ({
       setStart: () => {
-        /* mock */
+        return undefined;
       },
       setEnd: () => {
-        /* mock */
+        return undefined;
       },
       commonAncestorContainer: {
         nodeName: 'BODY',
@@ -195,7 +167,7 @@ if (!document.createRange) {
       cloneContents: () => document.createDocumentFragment(),
       cloneRange: () => document.createRange(),
       collapse: () => {
-        /* mock */
+        return undefined;
       },
       compareBoundaryPoints: () => 0,
       comparePoint: () => 0,
@@ -205,10 +177,10 @@ if (!document.createRange) {
         return template.content;
       },
       deleteContents: () => {
-        /* mock */
+        return undefined;
       },
       detach: () => {
-        /* mock */
+        return undefined;
       },
       extractContents: () => document.createDocumentFragment(),
       getBoundingClientRect: () => ({
@@ -224,37 +196,35 @@ if (!document.createRange) {
       }),
       getClientRects: () => [],
       insertNode: () => {
-        /* mock */
+        return undefined;
       },
       intersectsNode: () => false,
       isPointInRange: () => false,
       selectNode: () => {
-        /* mock */
+        return undefined;
       },
       selectNodeContents: () => {
-        /* mock */
+        return undefined;
       },
       setEndAfter: () => {
-        /* mock */
+        return undefined;
       },
       setEndBefore: () => {
-        /* mock */
+        return undefined;
       },
       setStartAfter: () => {
-        /* mock */
+        return undefined;
       },
       setStartBefore: () => {
-        /* mock */
+        return undefined;
       },
       surroundContents: () => {
-        /* mock */
+        return undefined;
       },
       toString: () => '',
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }) as any;
 }
-
-// Mock getClientRects for elements
 if (typeof Element.prototype.getClientRects === 'undefined') {
   Element.prototype.getClientRects = function () {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -277,34 +247,32 @@ if (typeof Element.prototype.getBoundingClientRect === 'undefined') {
     };
   };
 }
-
-// Mock element.animate for Angular animations
 if (typeof Element.prototype.animate === 'undefined') {
   Element.prototype.animate = function () {
     return {
       cancel: () => {
-        /* mock */
+        return undefined;
       },
       finish: () => {
-        /* mock */
+        return undefined;
       },
       pause: () => {
-        /* mock */
+        return undefined;
       },
       play: () => {
-        /* mock */
+        return undefined;
       },
       reverse: () => {
-        /* mock */
+        return undefined;
       },
       updatePlaybackRate: () => {
-        /* mock */
+        return undefined;
       },
       addEventListener: () => {
-        /* mock */
+        return undefined;
       },
       removeEventListener: () => {
-        /* mock */
+        return undefined;
       },
       dispatchEvent: () => true,
       currentTime: 0,
@@ -325,8 +293,6 @@ if (typeof Element.prototype.animate === 'undefined') {
     } as any;
   };
 }
-
-// Mock DragEvent for drag and drop tests
 if (typeof global.DragEvent === 'undefined') {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (global as any).DragEvent = class DragEvent extends Event {
@@ -337,8 +303,6 @@ if (typeof global.DragEvent === 'undefined') {
     }
   };
 }
-
-// Mock DataTransfer for drag and drop tests
 if (typeof global.DataTransfer === 'undefined') {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (global as any).DataTransfer = class DataTransfer {
@@ -349,21 +313,19 @@ if (typeof global.DataTransfer === 'undefined') {
     types: string[] = [];
 
     clearData(): void {
-      /* mock */
+      return undefined;
     }
     getData(): string {
       return '';
     }
     setData(): void {
-      /* mock */
+      return undefined;
     }
     setDragImage(): void {
-      /* mock */
+      return undefined;
     }
   };
 }
-
-// Mock URL.createObjectURL and revokeObjectURL
 if (typeof URL.createObjectURL === 'undefined') {
   URL.createObjectURL = function () {
     return 'blob:mock-url';
@@ -372,11 +334,9 @@ if (typeof URL.createObjectURL === 'undefined') {
 
 if (typeof URL.revokeObjectURL === 'undefined') {
   URL.revokeObjectURL = function () {
-    /* mock */
+    return undefined;
   };
 }
-
-// Add jasmine.any compatibility for expect.any
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace jasmine {
@@ -386,8 +346,6 @@ declare global {
     function stringContaining(str: string): any;
   }
 }
-
-// Add jasmine.any and jasmine.stringContaining for Jasmine compatibility
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (globalThis as any).jasmine = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

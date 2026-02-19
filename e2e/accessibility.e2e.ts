@@ -11,17 +11,13 @@ test.describe('Accessibility', () => {
     page,
     browserName,
   }, testInfo) => {
-    // Run axe accessibility tests
     const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
-
-    // WebKit and Mobile browsers may have different accessibility rules
     const isMobile = testInfo.project.name.includes('Mobile');
     if ((browserName === 'webkit' || isMobile) && accessibilityScanResults.violations.length > 0) {
       console.log(
         `${testInfo.project.name} a11y violations:`,
         JSON.stringify(accessibilityScanResults.violations),
       );
-      // For now, skip strict assertion on WebKit/Mobile
       test.skip();
     } else {
       expect(accessibilityScanResults.violations).toEqual([]);
@@ -32,11 +28,8 @@ test.describe('Accessibility', () => {
     page,
     browserName,
   }, testInfo) => {
-    // Wait for page to fully load (longer wait for WebKit and Mobile)
     const isMobile = testInfo.project.name.includes('Mobile');
     await page.waitForTimeout(browserName === 'webkit' || isMobile ? 2000 : 500);
-
-    // Check buttons have accessible names - exclude bubble menu buttons which may appear dynamically
     const buttons = await page.locator('button:not(.bubble-menu button)').all();
 
     for (const button of buttons) {
@@ -53,41 +46,40 @@ test.describe('Accessibility', () => {
   });
 
   test('should support keyboard navigation', async ({ page }) => {
-    // Tab through focusable elements
     await page.keyboard.press('Tab');
     const firstFocused = await page.evaluate(() => document.activeElement?.tagName);
     expect(firstFocused).toBeTruthy();
-
-    // Continue tabbing
+    await page.evaluate(() => {
+      const activeElement = document.activeElement;
+      if (activeElement) {
+        activeElement.setAttribute('data-focus-marker', 'first');
+      }
+    });
     await page.keyboard.press('Tab');
     const secondFocused = await page.evaluate(() => document.activeElement?.tagName);
     expect(secondFocused).toBeTruthy();
-
-    // Elements should be different
-    expect(firstFocused).not.toBe(secondFocused);
+    const movedFocus = await page.evaluate(
+      () => document.activeElement?.getAttribute('data-focus-marker') !== 'first',
+    );
+    expect(movedFocus).toBe(true);
   });
 
   test('should have proper heading hierarchy', async ({ page }) => {
-    // Check for h1
     const h1 = page.locator('h1').first();
 
     if (await h1.isVisible()) {
       const h1Text = await h1.textContent();
       expect(h1Text?.length).toBeGreaterThan(0);
     }
-
-    // If there are headings, they should follow proper hierarchy
     const headings = await page.locator('h1, h2, h3, h4, h5, h6').all();
 
     if (headings.length > 0) {
-      // First heading should be h1 or h2
       const firstHeadingTag = await headings[0].evaluate(el => el.tagName);
       expect(['H1', 'H2']).toContain(firstHeadingTag);
     }
   });
 
   test('should have sufficient color contrast', async ({ page }) => {
-    // Run contrast-specific accessibility check
     const accessibilityScanResults = await new AxeBuilder({ page }).withTags(['wcag2aa']).analyze();
 
     const contrastViolations = accessibilityScanResults.violations.filter(v =>
@@ -111,8 +103,6 @@ test.describe('Accessibility', () => {
       const ariaLabel = await input.getAttribute('aria-label');
       const ariaLabelledBy = await input.getAttribute('aria-labelledby');
       const placeholder = await input.getAttribute('placeholder');
-
-      // Input should have some form of label
       const hasLabel =
         (id && (await page.locator(`label[for="${id}"]`).count()) > 0) ||
         ariaLabel ||
@@ -128,8 +118,6 @@ test.describe('Accessibility', () => {
 
     if (await editor.isVisible()) {
       await editor.focus();
-
-      // Check that focus is visible (element should have outline or border change)
       const styles = await editor.evaluate(el => {
         const computed = window.getComputedStyle(el);
         return {
@@ -139,8 +127,6 @@ test.describe('Accessibility', () => {
           border: computed.border,
         };
       });
-
-      // Should have some form of focus indicator
       const hasFocusIndicator =
         styles.outlineWidth !== '0px' ||
         styles.outline !== 'none' ||
@@ -151,16 +137,12 @@ test.describe('Accessibility', () => {
   });
 
   test('should support screen reader announcements', async ({ page }) => {
-    // Check for ARIA live regions for dynamic content
     const liveRegions = page.locator('[aria-live]');
     const liveRegionCount = await liveRegions.count();
-
-    // If there are alerts, they should have aria-live
     const alerts = page.locator('[role="alert"]');
     const alertCount = await alerts.count();
 
     if (alertCount > 0) {
-      // At least one alert should have aria-live or be in a live region
       const hasLiveRegion =
         liveRegionCount > 0 || (await alerts.first().getAttribute('aria-live')) !== null;
       expect(hasLiveRegion).toBeTruthy();
@@ -168,11 +150,8 @@ test.describe('Accessibility', () => {
   });
 
   test('should have proper landmark regions', async ({ page, browserName }, testInfo) => {
-    // Wait for page to fully render (longer wait for WebKit and Mobile)
     const isMobile = testInfo.project.name.includes('Mobile');
     await page.waitForTimeout(browserName === 'webkit' || isMobile ? 2000 : 500);
-
-    // Check for main landmark - we added <main> element in ui.component.html
     const main = page.locator('main, [role="main"]').first();
     await expect(main).toBeVisible({ timeout: 10000 });
   });
@@ -205,31 +184,21 @@ test.describe('Accessibility', () => {
     for (const img of images) {
       const alt = await img.getAttribute('alt');
       const role = await img.getAttribute('role');
-
-      // Images should have alt text or be marked as decorative
       const hasAltText = alt !== null || role === 'presentation';
       expect(hasAltText).toBeTruthy();
     }
   });
 
   test('should support reduced motion preferences', async ({ page }) => {
-    // Set reduced motion preference
     await page.emulateMedia({ reducedMotion: 'reduce' });
 
     await page.goto('/');
     await page.waitForLoadState('networkidle');
-
-    // Trigger an animation (like theme toggle or alert)
     const themeToggle = page.getByRole('button', { name: /theme/i }).first();
 
     if (await themeToggle.isVisible()) {
       await themeToggle.click();
-
-      // Check that animations respect reduced motion
-      // This is hard to test directly, but we can verify no errors occur
       await page.waitForTimeout(500);
-
-      // Page should still be functional
       const editor = page.locator('.tiptap');
       await expect(editor).toBeVisible();
     }

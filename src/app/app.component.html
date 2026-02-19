@@ -1,1 +1,96 @@
-<app-ui />
+<main
+  class="min-h-screen flex flex-col items-center py-6 sm:py-8 md:py-12 lg:py-16 px-4 sm:px-6 lg:px-8 bg-gray-100 dark:bg-gray-900 transition-colors">
+  <div class="fixed top-4 right-4 z-50">
+    <button
+      (click)="toggleDarkMode()"
+      class="p-2 rounded-lg bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+      [attr.aria-label]="isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'"
+      title="Toggle dark mode">
+      @if (isDarkMode()) {
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            fill-rule="evenodd"
+            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+            clip-rule="evenodd" />
+        </svg>
+      } @else {
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+        </svg>
+      }
+    </button>
+  </div>
+
+  <div class="max-w-3xl w-full text-center space-y-1 sm:space-y-2 mb-6 sm:mb-8 md:mb-10 lg:mb-12">
+    <h1
+      class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
+      Convert Rich Text to Markdown
+    </h1>
+    <p class="text-base sm:text-lg text-gray-600 dark:text-gray-400">
+      Quickly convert your rich formatted text to Markdown
+    </p>
+  </div>
+
+  <div class="alert-container">
+    @for (alert of alertService.alerts(); track alert.id) {
+      <app-alert
+        [type]="alert.type"
+        [title]="alert.title"
+        [message]="alert.message"
+        (customClose)="alertService.close(alert.id)"></app-alert>
+    }
+  </div>
+
+  <div
+    class="w-full max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl xl:max-w-4xl space-y-4 sm:space-y-6 md:space-y-8">
+    <div class="relative">
+      <div class="editor-container">
+        <div class="editor-wrapper">
+          <app-richtext #editor></app-richtext>
+        </div>
+
+        <div class="sticky-buttons">
+          <div class="tooltip-container">
+            <button class="custom-button" aria-label="Import Markdown" (click)="openImportModal()">
+              <lucide-angular [img]="Import"></lucide-angular>
+            </button>
+            <span class="tooltip-text">Import Markdown</span>
+          </div>
+
+          <div class="tooltip-container">
+            <button class="custom-button" aria-label="Copy Markdown" (click)="copyMarkdown()">
+              <lucide-angular [img]="ClipboardCopy"></lucide-angular>
+            </button>
+            <span class="tooltip-text">Copy Markdown</span>
+          </div>
+
+          <div class="tooltip-container">
+            <button class="custom-button" aria-label="Download as .md File" (click)="downloadMarkdown()">
+              <lucide-angular [img]="ArrowDownToLine"></lucide-angular>
+            </button>
+            <span class="tooltip-text">Download as .md File</span>
+          </div>
+
+          <div class="tooltip-container">
+            <button class="custom-button" aria-label="Clear Text" (click)="clearContent()">
+              <lucide-angular [img]="X"></lucide-angular>
+            </button>
+            <span class="tooltip-text">Clear Text</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="w-full" #markdownPreview>
+      <app-markdown-preview [markdownContent]="markdownContent" [isOpenByDefault]="false">
+      </app-markdown-preview>
+    </div>
+  </div>
+
+  <div
+    class="w-full max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl xl:max-w-4xl mt-8 sm:mt-10 md:mt-12 lg:mt-16">
+    <app-accordion [items]="helpAccordionItems"></app-accordion>
+  </div>
+
+  <app-import-modal [isOpen]="showImportModal" (closeModal)="closeImportModal()"></app-import-modal>
+</main>

@@ -250,6 +250,13 @@ markdown-converter/
 - Write tests for new features
 - Ensure WCAG 2.0 AA accessibility compliance
 
+### Comment Policy
+
+- Comments must explain intent, tradeoffs, or constraints, not restate the code.
+- Keep comments when behavior is non-obvious (cross-browser quirks, framework limitations, polyfills, lint exceptions).
+- Avoid placeholder debt markers (`TODO`, `FIXME`, `XXX`) in committed code; lint blocks these terms.
+- Add JSDoc for exported APIs that are consumed outside the file/module. Skip JSDoc for obvious private/internal methods.
+
 ## Performance
 
 | Metric                 | Value  |

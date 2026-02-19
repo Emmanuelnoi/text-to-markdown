@@ -15,7 +15,6 @@ describe('MarkdownPreviewComponent', () => {
     fixture = TestBed.createComponent(MarkdownPreviewComponent);
     component = fixture.componentInstance;
 
-    // Mock the required markdownContent signal input
     component.markdownContent = signal('');
 
     fixture.detectChanges();

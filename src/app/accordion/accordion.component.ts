@@ -1,11 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-
-interface AccordionItem {
-  id: string;
-  title: string;
-  content: string;
-}
+import { AccordionItem } from './accordion.models';
 
 @Component({
   selector: 'app-accordion',
@@ -16,7 +11,6 @@ interface AccordionItem {
 export class AccordionComponent {
   @Input() title = 'Help Center';
   @Input() items: AccordionItem[] = [];
-  @Input() titleBgColor = 'bg-gray-50'; //Default background color
 
   openItem: string | null = null;
 

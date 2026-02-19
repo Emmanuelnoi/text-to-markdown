@@ -7,13 +7,9 @@ describe('ThemeService', () => {
   let service: ThemeService;
 
   beforeEach(() => {
-    // Mock localStorage
     vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(null);
-    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
-      // no-op
-    });
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => undefined);
 
-    // Mock matchMedia
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
       value: vi
