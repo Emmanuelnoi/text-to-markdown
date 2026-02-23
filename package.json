@@ -71,7 +71,7 @@
   "devDependencies": {
     "@analogjs/vite-plugin-angular": "^1.21.2",
     "@angular-devkit/build-angular": "^19.2.15",
-    "@angular-eslint/eslint-plugin": "^19.3.0",
+    "@angular-eslint/eslint-plugin": "^21.2.0",
     "@angular-eslint/template-parser": "^19.3.0",
     "@angular/cli": "^19.2.15",
     "@angular/compiler-cli": "^19.2.15",
