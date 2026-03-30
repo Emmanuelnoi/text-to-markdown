@@ -104,7 +104,7 @@
     "playwright": "^1.56.1",
     "postcss": "^8.5.8",
     "prettier": "^3.8.1",
-    "tailwind-merge": "^2.2.0",
+    "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.2.1",
     "tailwindcss-animate": "^1.0.6",
     "typescript": "~5.8.3",
