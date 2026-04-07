@@ -1,6 +1,6 @@
-# Markdown Converter
+# Richtext2Markdown
 
-A rich text to Markdown web app built with Angular 19, Tiptap, and Turndown.
+Accessibility-first rich text to markdown editor built with Angular, Tiptap, and deterministic conversion workflows.
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 ![Coverage](https://img.shields.io/badge/coverage-vitest-blue)
@@ -8,9 +8,37 @@ A rich text to Markdown web app built with Angular 19, Tiptap, and Turndown.
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-## Demo
+[**Live Demo**](https://www.richtext2markdown.com) • [**Case Study**](https://www.emmanuelnoi.dev/case-study/richtext-to-markdown)
+
+## Why This Project
+
+Many conversion tools get the basics working but break down on accessibility, deterministic output, import/export edge cases, or cross-browser behavior. Richtext2Markdown was built to prove that authoring tools can be keyboard-friendly, accessible, and release-ready without sacrificing responsiveness.
+
+## Role & Ownership
+
+Built as a solo product engineering project. I owned the Angular application architecture, editor and conversion workflow design, accessibility implementation, test automation strategy, and deployment quality gates.
+
+## Highlights
+
+- Accessibility-first interaction model with keyboard-focused UX and automated accessibility checks
+- Deterministic rich text to markdown conversion pipeline
+- Real import/export workflows covering files, URLs, templates, clipboard, and markdown download
+- Cross-browser E2E coverage with Playwright and accessibility checks with axe-core
+- Production-grade Angular app structure using standalone components and signals
+
+## Preview
 
 ![Markdown Converter Demo](public/media/Richtext2markdown.gif)
+
+## Architecture Snapshot
+
+| Area | Decision |
+| --- | --- |
+| App shell | Angular standalone components + signals |
+| Editor | Tiptap / ProseMirror for rich text composition |
+| Conversion | Turndown-based markdown pipeline with deterministic output goals |
+| Quality | Vitest + Playwright + axe-core |
+| UI | Tailwind CSS with keyboard-first interaction and theme support |
 
 ## Features
 
@@ -22,6 +50,13 @@ A rich text to Markdown web app built with Angular 19, Tiptap, and Turndown.
 - Accessibility checks and keyboard-focused UX
 - Retry/backoff for URL imports
 
+## Engineering Focus
+
+- Keep conversion behavior predictable enough for real writing workflows
+- Preserve accessibility across editing, importing, previewing, and exporting
+- Treat cross-browser behavior as a release concern, not an afterthought
+- Use automated quality checks to reduce regressions in keyboard and assistive-technology paths
+
 ## Tech Stack
 
 - Angular 19 (standalone components + signals)
@@ -31,6 +66,13 @@ A rich text to Markdown web app built with Angular 19, Tiptap, and Turndown.
 - Turndown + Marked
 - Vitest + Playwright + axe-core
 - ESLint + Prettier + Husky
+
+## Quality & Delivery
+
+- Unit testing with Vitest for core application logic
+- Cross-browser E2E testing with Playwright
+- Accessibility validation with axe-core
+- Build, lint, and testing workflow set up for repeatable delivery
 
 ## Project Structure
 
@@ -166,6 +208,13 @@ npm run build
 ```
 
 Deploy the `dist/markdown_converter/browser` directory.
+
+## What This Repo Shows
+
+- Angular frontend architecture for a real product workflow
+- Accessibility-focused implementation beyond surface-level checklists
+- Conversion and import/export problem solving with user-facing reliability in mind
+- Testing discipline suitable for production-facing frontend delivery
 
 ## Contributing
 
