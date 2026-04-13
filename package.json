@@ -66,7 +66,7 @@
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "turndown": "^7.2.4",
-    "zone.js": "~0.15.0"
+    "zone.js": "~0.16.1"
   },
   "devDependencies": {
     "@analogjs/vite-plugin-angular": "1.21.2",
